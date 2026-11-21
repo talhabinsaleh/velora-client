@@ -1,0 +1,26 @@
+import { Suspense } from "react";
+import Categories from "@/components/home/Categories";
+import FeaturedServices, { FeaturedServicesSkeleton } from "@/components/home/FeaturedServices";
+import Hero from "@/components/home/Hero";
+import HowItWorks from "@/components/home/HowItWorks";
+import VisitUs, { CallToAction } from "@/components/home/VisitUs";
+
+// Always show the latest services (an admin can add or hide one at any time)
+export const dynamic = "force-dynamic";
+
+export default function HomePage() {
+  return (
+    <>
+      <Hero />
+      <Suspense fallback={<FeaturedServicesSkeleton />}>
+        <FeaturedServices />
+      </Suspense>
+      <Suspense fallback={<div className="h-[60rem] bg-sand/60" />}>
+        <Categories />
+      </Suspense>
+      <HowItWorks />
+      <VisitUs />
+      <CallToAction />
+    </>
+  );
+}
