@@ -135,15 +135,14 @@ function ManageAppointments() {
       ) : data ? (
         <div className={loading ? "opacity-60 transition-opacity" : "transition-opacity"}>
           <div className="table-wrap">
-            <table className="table min-w-[1040px]">
+            <table className="table min-w-[900px]">
               <thead>
                 <tr>
                   <th>Customer</th>
                   <th>Service</th>
                   <th>Date &amp; time</th>
                   <th>Price</th>
-                  <th>Status</th>
-                  <th>Payment</th>
+                  <th>Status · Payment</th>
                   <th>Requested</th>
                   <th className="text-right">Actions</th>
                 </tr>
@@ -153,7 +152,7 @@ function ManageAppointments() {
                   const c = customerOf(a);
                   return (
                     <tr key={a._id}>
-                      <td className="max-w-[220px]">
+                      <td className="max-w-[190px]">
                         <div className="flex items-center gap-2.5">
                           <Avatar name={c?.name} image={c?.image} size={34} />
                           <div className="min-w-0">
@@ -162,7 +161,7 @@ function ManageAppointments() {
                           </div>
                         </div>
                       </td>
-                      <td className="max-w-[220px]">
+                      <td className="max-w-[200px]">
                         <ServiceCell appointment={a} />
                       </td>
                       <td className="whitespace-nowrap">
@@ -171,10 +170,10 @@ function ManageAppointments() {
                       </td>
                       <td className="font-semibold">{formatPrice(a.servicePrice)}</td>
                       <td>
-                        <StatusBadge status={a.status} />
-                      </td>
-                      <td>
-                        <StatusBadge status={a.paymentStatus} />
+                        <div className="flex flex-col items-start gap-1">
+                          <StatusBadge status={a.status} />
+                          <StatusBadge status={a.paymentStatus} />
+                        </div>
                       </td>
                       <td className="text-xs whitespace-nowrap text-muted">{formatDate(a.createdAt)}</td>
                       <td>{buttons(a)}</td>
