@@ -2,6 +2,7 @@
 
 import { ArrowRight, Menu, X } from "lucide-react";
 import Link from "next/link";
+import SmartLink from "./SmartLink";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSession } from "@/lib/auth-client";
@@ -15,12 +16,14 @@ import { hardNavigate } from "@/lib/navigation";
 const PUBLIC_LINKS = [
   { href: "/", label: "Home" },
   { href: "/services", label: "Browse Services" },
-  { href: "/#how-it-works", label: "How It Works" },
-  { href: "/#contact", label: "Contact" },
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
 ];
 
+// Pages that open with a full-width photo, where the navbar floats over it as a glass pill
+const PHOTO_PAGES = ["/", "/about", "/contact"];
+
 function isActive(pathname: string, href: string) {
-  if (href.includes("#")) return false;
   return href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
 }
 
@@ -31,7 +34,7 @@ export default function Navbar({ initialUser }: { initialUser: NavUser | null })
   // so signing in or out updates the navbar straight away
   const user: NavUser | null = isPending ? initialUser : (data?.user as NavUser | undefined) ?? null;
 
-  const overHero = pathname === "/";
+  const overHero = PHOTO_PAGES.includes(pathname);
   const [scrolled, setScrolled] = useState(false);
   // The menu remembers which page it was opened on, so it closes by itself after navigating
   const [openOn, setOpenOn] = useState<string | null>(null);
@@ -43,7 +46,7 @@ export default function Navbar({ initialUser }: { initialUser: NavUser | null })
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [pathname]);
 
   // Lock page scroll while the mobile menu is open
   useEffect(() => {
@@ -77,7 +80,7 @@ export default function Navbar({ initialUser }: { initialUser: NavUser | null })
               const active = isActive(pathname, link.href);
               return (
                 <li key={link.href}>
-                  <Link
+                  <SmartLink
                     href={link.href}
                     aria-current={active ? "page" : undefined}
                     className={`group relative flex flex-col items-center rounded-full px-3.5 py-2 text-sm font-semibold transition-colors ${
@@ -97,7 +100,7 @@ export default function Navbar({ initialUser }: { initialUser: NavUser | null })
                         active ? "w-5 opacity-100" : "w-0 opacity-0 group-hover:w-3 group-hover:opacity-70"
                       }`}
                     />
-                  </Link>
+                  </SmartLink>
                 </li>
               );
             })}
@@ -209,7 +212,7 @@ function MobileMenu({
           {links.map((link, i) => {
             const active = isActive(pathname, link.href);
             return (
-              <Link
+              <SmartLink
                 key={link.href}
                 href={link.href}
                 onClick={onClose}
@@ -220,7 +223,7 @@ function MobileMenu({
               >
                 {link.label}
                 <ArrowRight className={`size-5 ${active ? "text-gold" : "text-line"}`} />
-              </Link>
+              </SmartLink>
             );
           })}
           {user && (

@@ -1,5 +1,6 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
+import ScrollReset from "@/components/ScrollReset";
 import { getUser } from "@/lib/session";
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
@@ -7,9 +8,10 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
   const navUser = user ? { name: user.name, email: user.email, image: user.image, role: user.role } : null;
   return (
     <>
+      <ScrollReset />
       <Navbar initialUser={navUser} />
       <main className="flex flex-1 flex-col">{children}</main>
-      <Footer signedIn={!!user} />
+      <Footer />
     </>
   );
 }

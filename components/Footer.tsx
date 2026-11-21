@@ -1,21 +1,19 @@
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
-import { BRAND, CATEGORIES, SALON } from "@/lib/constants";
+import { BRAND, CATEGORIES, SALON, categoryHref } from "@/lib/constants";
 import Logo from "./Logo";
+import SmartLink from "./SmartLink";
 import SocialIcon from "./SocialIcon";
 
-export default function Footer({ signedIn }: { signedIn: boolean }) {
-  const explore = [
-    { href: "/", label: "Home" },
-    { href: "/services", label: "Browse Services" },
-    ...(signedIn
-      ? [{ href: "/dashboard", label: "Dashboard" }]
-      : [
-          { href: "/sign-in", label: "Sign In" },
-          { href: "/sign-up", label: "Sign Up" },
-        ]),
-    { href: "/#how-it-works", label: "How It Works" },
-  ];
+const EXPLORE = [
+  { href: "/", label: "Home" },
+  { href: "/services", label: "Browse Services" },
+  { href: "/about", label: "About Us" },
+  { href: "/contact", label: "Contact" },
+];
+
+export default function Footer() {
+  const explore = EXPLORE;
 
   return (
     <footer className="relative mt-auto overflow-hidden bg-ink text-white/75">
@@ -47,9 +45,9 @@ export default function Footer({ signedIn }: { signedIn: boolean }) {
           <ul className="mt-5 space-y-3 text-sm">
             {explore.map((l) => (
               <li key={l.href}>
-                <Link href={l.href} className="transition hover:text-gold-soft">
+                <SmartLink href={l.href} className="transition hover:text-gold-soft">
                   {l.label}
-                </Link>
+                </SmartLink>
               </li>
             ))}
           </ul>
@@ -60,7 +58,7 @@ export default function Footer({ signedIn }: { signedIn: boolean }) {
           <ul className="mt-5 space-y-3 text-sm">
             {CATEGORIES.map((c) => (
               <li key={c.slug}>
-                <Link href={`/services?category=${encodeURIComponent(c.name)}`} className="transition hover:text-gold-soft">
+                <Link href={categoryHref(c.name)} className="transition hover:text-gold-soft">
                   {c.name}
                 </Link>
               </li>
