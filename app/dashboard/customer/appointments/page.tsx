@@ -1,12 +1,14 @@
 "use client";
 
-import { CalendarPlus, CreditCard, Eye, Loader2, XCircle } from "lucide-react";
+import { CalendarPlus, CreditCard, Eye, Loader2, RotateCcw, Star, Undo2, XCircle } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import { toast } from "sonner";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import AppointmentDetails, { ServiceCell } from "@/components/dashboard/AppointmentDetails";
+import { CancelRequestModal, RequestBadge, ReviewModal } from "@/components/dashboard/CustomerModals";
+import { Stars } from "@/components/Stars";
 import { DashHeader, FilterTabs, TableSkeleton } from "@/components/dashboard/ui";
 import Pagination from "@/components/Pagination";
 import { EmptyState, ErrorState } from "@/components/States";
@@ -39,6 +41,8 @@ function MyAppointments() {
   const [cancelling, setCancelling] = useState<Appointment | null>(null);
   const [busy, setBusy] = useState(false);
   const [paying, setPaying] = useState<string | null>(null);
+  const [reviewing, setReviewing] = useState<Appointment | null>(null);
+  const [requesting, setRequesting] = useState<Appointment | null>(null);
 
   function setParam(key: string, value: string | null) {
     const next = new URLSearchParams(params.toString());
@@ -93,6 +97,21 @@ function MyAppointments() {
             {paying === a._id ? "Redirecting…" : "Pay Now"}
           </button>
         )}
+        {a.status === "confirmed" && a.paymentStatus === "unpaid" && a.cancelRequest?.status !== "open" && (
+          <button type="button" onClick={() => setRequesting(a)} className="btn btn-ghost btn-sm px-3 text-rose" title="Ask the salon to cancel">
+            <Undo2 className="size-4" /> Request cancel
+          </button>
+        )}
+        {a.paymentStatus === "paid" && !a.review && (
+          <button type="button" onClick={() => setReviewing(a)} className="btn btn-outline btn-sm px-3">
+            <Star className="size-4 text-amber-500" /> Rate visit
+          </button>
+        )}
+        {(a.status === "cancelled" || a.paymentStatus === "paid") && a.serviceId?.status === "active" && (
+          <Link href={`/services/${a.serviceId._id}`} className="btn btn-ghost btn-sm px-3" title="Book this service again">
+            <RotateCcw className="size-4" /> Book again
+          </Link>
+        )}
       </div>
     );
   }
@@ -101,7 +120,7 @@ function MyAppointments() {
     <>
       <DashHeader
         title="My Appointments"
-        text="Every appointment request you've made. Cancel while pending, and pay once the salon confirms."
+        text="Every appointment request you've made. Cancel while pending, pay once the salon confirms, and rate your visit afterwards."
         actions={
           <Link href="/services" className="btn btn-dark">
             <CalendarPlus className="size-4" /> New appointment
@@ -151,7 +170,11 @@ function MyAppointments() {
                     </td>
                     <td className="font-semibold whitespace-nowrap">{formatPrice(a.servicePrice)}</td>
                     <td>
-                      <StatusBadge status={a.status} />
+                      <div className="flex flex-col items-start gap-1">
+                        <StatusBadge status={a.status} />
+                        <RequestBadge appointment={a} />
+                        {a.review && <Stars value={a.review.rating} size={12} />}
+                      </div>
                     </td>
                     <td>
                       <StatusBadge status={a.paymentStatus} />
@@ -187,9 +210,11 @@ function MyAppointments() {
                     {formatDate(a.createdAt)}
                   </p>
                 </div>
-                <div className="mt-3 flex gap-2">
+                <div className="mt-3 flex flex-wrap items-center gap-2">
                   <StatusBadge status={a.status} />
                   <StatusBadge status={a.paymentStatus} />
+                  <RequestBadge appointment={a} />
+                  {a.review && <Stars value={a.review.rating} size={12} />}
                 </div>
                 <div className="mt-3 border-t border-line pt-3">{actions(a, true)}</div>
               </li>
@@ -224,6 +249,23 @@ function MyAppointments() {
             </>
           )
         }
+      />
+
+      <ReviewModal
+        appointment={reviewing}
+        onClose={() => setReviewing(null)}
+        onDone={() => {
+          setReviewing(null);
+          reload();
+        }}
+      />
+      <CancelRequestModal
+        appointment={requesting}
+        onClose={() => setRequesting(null)}
+        onDone={() => {
+          setRequesting(null);
+          reload();
+        }}
       />
 
       <ConfirmDialog

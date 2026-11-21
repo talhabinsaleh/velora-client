@@ -1,6 +1,8 @@
 "use client";
 
-import { ReceiptText } from "lucide-react";
+import { FileText, ReceiptText } from "lucide-react";
+import ReceiptModal from "@/components/dashboard/ReceiptModal";
+import { useSession } from "@/lib/auth-client";
 import Image from "next/image";
 import { useState } from "react";
 import { DashHeader, TableSkeleton } from "@/components/dashboard/ui";
@@ -13,6 +15,8 @@ import type { Paged, Transaction } from "@/lib/types";
 
 export default function PaymentHistoryPage() {
   const [page, setPage] = useState(1);
+  const [receipt, setReceipt] = useState<Transaction | null>(null);
+  const { data: session } = useSession();
   const { data, error, loading, reload } = useApi<Paged<Transaction>>(`/api/payments/history?page=${page}&limit=10`);
 
   return (
@@ -37,6 +41,7 @@ export default function PaymentHistoryPage() {
                   <th>Status</th>
                   <th>Reference</th>
                   <th>Paid on</th>
+                  <th className="text-right">Receipt</th>
                 </tr>
               </thead>
               <tbody>
@@ -73,6 +78,11 @@ export default function PaymentHistoryPage() {
                         {shortId(t.stripeSessionId, 8)}
                       </td>
                       <td className="text-xs whitespace-nowrap text-muted">{formatDateTime(t.createdAt)}</td>
+                      <td className="text-right">
+                        <button type="button" onClick={() => setReceipt(t)} className="btn btn-ghost btn-sm px-3">
+                          <FileText className="size-4" /> View
+                        </button>
+                      </td>
                     </tr>
                   );
                 })}
@@ -84,6 +94,11 @@ export default function PaymentHistoryPage() {
           </div>
         </>
       ) : null}
+      <ReceiptModal
+        transaction={receipt}
+        customer={session?.user ? { name: session.user.name, email: session.user.email } : undefined}
+        onClose={() => setReceipt(null)}
+      />
     </>
   );
 }

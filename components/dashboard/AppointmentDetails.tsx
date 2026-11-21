@@ -1,6 +1,7 @@
 "use client";
 
-import { CalendarDays, Clock3, Mail, MessageSquareText, Phone, Receipt, Tag } from "lucide-react";
+import { CalendarDays, Clock3, Mail, MessageSquareText, Phone, Receipt, Star, Tag, Undo2 } from "lucide-react";
+import { Stars } from "@/components/Stars";
 import Image from "next/image";
 import type { ReactNode } from "react";
 import Avatar from "@/components/Avatar";
@@ -110,6 +111,29 @@ export default function AppointmentDetails({
             </p>
             <p className="mt-2 text-sm leading-relaxed whitespace-pre-line text-ink-3">{a.message ? a.message : <span className="text-muted italic">No message was added.</span>}</p>
           </div>
+
+          {a.cancelRequest && (
+            <div className={`mt-3 rounded-2xl border p-4 ${a.cancelRequest.status === "open" ? "border-amber-200 bg-amber-50/70" : "border-line"}`}>
+              <p className="flex items-center gap-2 text-xs font-semibold tracking-wide text-muted uppercase">
+                <Undo2 className="size-4 text-gold" /> Cancellation request ·{" "}
+                <span className={a.cancelRequest.status === "open" ? "text-amber-800" : a.cancelRequest.status === "approved" ? "text-ink-3" : "text-sky-800"}>
+                  {a.cancelRequest.status}
+                </span>
+              </p>
+              <p className="mt-2 text-sm text-ink-3">“{a.cancelRequest.reason}”</p>
+              {a.cancelRequest.adminNote && <p className="mt-2 text-sm text-ink-3"><strong className="text-ink">Salon reply:</strong> {a.cancelRequest.adminNote}</p>}
+            </div>
+          )}
+
+          {a.review && (
+            <div className="mt-3 rounded-2xl border border-line p-4">
+              <p className="flex items-center gap-2 text-xs font-semibold tracking-wide text-muted uppercase">
+                <Star className="size-4 text-gold" /> Review {a.review.hidden && <span className="text-rose">(hidden)</span>}
+              </p>
+              <Stars value={a.review.rating} className="mt-2" />
+              {a.review.comment && <p className="mt-2 text-sm text-ink-3">“{a.review.comment}”</p>}
+            </div>
+          )}
         </div>
       )}
     </Modal>

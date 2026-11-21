@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, CalendarCheck2, CalendarClock, CalendarDays, CalendarX2, CreditCard, Sparkles, Wallet } from "lucide-react";
+import { ArrowRight, CalendarCheck2, CalendarClock, CalendarDays, CalendarX2, CreditCard, Sparkles, Star, Undo2, Wallet } from "lucide-react";
 import Link from "next/link";
 import { ServiceCell } from "@/components/dashboard/AppointmentDetails";
 import { DashHeader, StatCard, StatSkeletons } from "@/components/dashboard/ui";
@@ -57,6 +57,38 @@ export default function CustomerOverview() {
               <Link href="/dashboard/customer/appointments?status=confirmed" className="btn btn-dark btn-sm">
                 Pay now <span className="btn-chip"><ArrowRight /></span>
               </Link>
+            </div>
+          )}
+
+          {(data.awaitingReview > 0 || data.openRequests > 0) && (
+            <div className="mt-4 grid gap-4 md:grid-cols-2">
+              {data.awaitingReview > 0 && (
+                <Link href="/dashboard/customer/appointments" className="group flex items-center gap-4 rounded-2xl border border-line bg-white p-5 shadow-soft transition hover:-translate-y-0.5 hover:shadow-lift">
+                  <span className="flex size-12 items-center justify-center rounded-2xl bg-amber-50 text-amber-500">
+                    <Star className="size-5 fill-current" />
+                  </span>
+                  <div className="flex-1">
+                    <p className="font-semibold text-ink">
+                      {data.awaitingReview} visit{data.awaitingReview > 1 ? "s" : ""} waiting for your review
+                    </p>
+                    <p className="text-sm text-muted">Your feedback helps other guests choose.</p>
+                  </div>
+                  <ArrowRight className="size-5 text-muted transition group-hover:translate-x-1 group-hover:text-ink" />
+                </Link>
+              )}
+              {data.openRequests > 0 && (
+                <div className="flex items-center gap-4 rounded-2xl border border-amber-200 bg-amber-50/60 p-5">
+                  <span className="flex size-12 items-center justify-center rounded-2xl bg-white text-amber-700">
+                    <Undo2 className="size-5" />
+                  </span>
+                  <div>
+                    <p className="font-semibold text-ink">
+                      {data.openRequests} cancellation request{data.openRequests > 1 ? "s" : ""} with the salon
+                    </p>
+                    <p className="text-sm text-muted">We&apos;ll update the appointment once they reply.</p>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
