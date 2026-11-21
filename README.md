@@ -1,36 +1,96 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Velora — Salon & Spa Appointment Booking (Client)
 
-## Getting Started
+Velora is a salon appointment booking platform. Customers explore salon services, request an appointment for a date and time slot, follow its status and pay for confirmed appointments with Stripe. The salon admin manages services, reviews and confirms requests, manages customers and monitors payments.
 
-First, run the development server:
+This repository is the **Next.js client**. The REST API lives in [velora-server](https://github.com/talhabinsaleh/velora-server).
+
+- **Live website:** https://velora-talha.vercel.app
+- **Client repository:** https://github.com/talhabinsaleh/velora-client
+- **Server repository:** https://github.com/talhabinsaleh/velora-server
+
+## Important Features
+
+**Customers**
+- Browse active services, search by name, filter by category and sort by price (or newest / duration), all synced to the URL
+- Protected service details page (`/services/[id]`) with a 14-day date strip, live time-slot availability and an optional message
+- Appointment requests are saved as *Pending / Unpaid*. Double bookings of the same slot are blocked on the server
+- Customer dashboard: overview stats (total, pending, confirmed, cancelled), My Appointments, Payment History and My Profile
+- Cancel own pending requests; **Pay Now** for confirmed appointments through Stripe Checkout
+- Payment success page waits for the verified Stripe webhook before showing the confirmation; a cancel page explains nothing was charged
+
+**Admin**
+- Overview: registered customers, active services, total / pending / confirmed requests, successful payments, revenue, a 14-day request chart and requests by category
+- Manage Services: search, filter, sort, activate / deactivate switch, edit and delete (with confirmation)
+- Add / Update Service form with ImgBB **image upload** (not a URL), price and duration validation, Active by default
+- Manage Appointments: filter by status and payment, search by customer or service, view details, confirm pending, cancel pending or confirmed
+- Manage Users: view customer details and history, block and unblock (blocked users are signed out immediately)
+- Transactions: read-only Stripe payment records with session reference, amount, currency and status
+
+**Platform**
+- Better Auth: email + password (min 6 chars, one uppercase, one lowercase) and Google sign-in, optional profile image (upload or URL)
+- Admins can never be created through sign-up (`role` and `isBlocked` are server-only fields)
+- A signed JWT in an HTTP-only cookie is verified by Express middleware on every protected API, together with the user's role
+- Dashboards are separated by role on the server; opening another role's URL shows a 403 page
+- Navbar changes from a floating glass bar to a solid bar on scroll and updates instantly when you sign in or out
+- Meaningful loaders and skeletons, toast notifications (no `alert()`), friendly 404 / error pages, confirmation dialogs and status badges
+- Fully responsive (mobile menu, mobile appointment cards, scrollable tables)
+
+## Technology Stack
+
+Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS 4 · Better Auth (MongoDB adapter) · jose (JWT) · Sonner (toasts) · Lucide icons · Stripe Checkout (through the API) · ImgBB (through the API) · Vercel
+
+## Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/talhabinsaleh/velora-client.git
+cd velora-client
+npm install
+cp .env.example .env.local   # then fill in the values
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## How to Run the Project Locally
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Start the API first (see the [server README](https://github.com/talhabinsaleh/velora-server)). It runs on `http://localhost:5000`.
+2. Start the website:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run dev      # http://localhost:3000
+```
 
-## Learn More
+Other scripts: `npm run build`, `npm start`, `npm run lint`.
 
-To learn more about Next.js, take a look at the following resources:
+All browser requests go to this site's own `/api` path. Next.js handles `/api/auth/*` (Better Auth) and `/api/session-token`, and forwards every other `/api/*` request to the Express API. Cookies therefore stay first-party and there are no CORS issues in production.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Required Environment Variables
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Names only, never commit real values:
 
-## Deploy on Vercel
+```
+API_URL
+MONGODB_URI
+DB_NAME
+BETTER_AUTH_URL
+BETTER_AUTH_SECRET
+JWT_SECRET
+GOOGLE_CLIENT_ID
+GOOGLE_CLIENT_SECRET
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+`JWT_SECRET` must be the same value as on the server. The Google OAuth redirect URI is `<BETTER_AUTH_URL>/api/auth/callback/google`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Project Structure
+
+```
+app/
+  (site)/            public website: home, services, sign in/up, payment pages
+  dashboard/         role-based dashboards (customer/*, admin/*)
+  api/auth/          Better Auth handler
+  api/session-token/ issues the JWT the API verifies
+components/          UI building blocks, home sections, dashboard pieces
+lib/                 auth, API client, types, constants, helpers
+proxy.ts             redirects signed-out visitors away from private pages
+```
+
+## Credits
+
+Photography from [Unsplash](https://unsplash.com) (free license).
