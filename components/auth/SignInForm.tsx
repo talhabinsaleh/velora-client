@@ -29,7 +29,8 @@ export async function finishSignIn(redirect: string | null) {
 export default function SignInForm() {
   const params = useSearchParams();
   const redirect = safeRedirect(params.get("redirect"));
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(params.get("email") ?? "");
+  const justRegistered = params.get("registered") === "1";
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<{ email?: string; password?: string; form?: string }>({});
   const [loading, setLoading] = useState(false);
@@ -41,8 +42,8 @@ export default function SignInForm() {
 
   useEffect(() => {
     if (urlError) toast.error(urlError, { id: "signin-error" });
-    else if (redirect) toast.info("Please sign in to continue.", { id: "signin-needed" });
-  }, [urlError, redirect]);
+    else if (redirect && !justRegistered) toast.info("Please sign in to continue.", { id: "signin-needed" });
+  }, [urlError, redirect, justRegistered]);
 
   async function submit(e: FormEvent) {
     e.preventDefault();
@@ -82,6 +83,11 @@ export default function SignInForm() {
       <GoogleButton redirect={redirect} />
       <Divider />
       <form onSubmit={submit} noValidate className="space-y-5">
+        {justRegistered && !formError && (
+          <p role="status" className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">
+            Your account is ready. Sign in with your new password to start booking.
+          </p>
+        )}
         {formError && (
           <p role="alert" className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-800">
             {formError}

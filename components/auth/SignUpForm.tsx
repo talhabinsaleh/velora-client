@@ -6,12 +6,12 @@ import { useSearchParams } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { toast } from "sonner";
 import ImageUploader from "@/components/ImageUploader";
-import { signUp } from "@/lib/auth-client";
+import { signOutEverywhere, signUp } from "@/lib/auth-client";
+import { hardNavigate } from "@/lib/navigation";
 import { safeRedirect } from "@/lib/return-path";
 import { emailProblem, passwordProblem, PASSWORD_RULES } from "@/lib/validation";
 import GoogleButton, { Divider } from "./GoogleButton";
 import PasswordInput from "./PasswordInput";
-import { finishSignIn } from "./SignInForm";
 
 interface Errors {
   name?: string;
@@ -65,15 +65,13 @@ export default function SignUpForm() {
       setLoading(false);
       return;
     }
-    try {
-      toast.success(`Welcome to Velora, ${name.trim().split(" ")[0]}! Your account is ready.`);
-      // New accounts are always customers, so this lands on the customer dashboard (or the page they came from)
-      await finishSignIn(redirect);
-    } catch (err) {
-      setErrors({ form: (err as Error).message });
-      toast.error((err as Error).message);
-      setLoading(false);
-    }
+    // The account is created, but you sign in yourself afterwards (Better Auth opens a session on
+    // sign-up, so end it). Sign In opens with your email filled in and a confirmation message.
+    await signOutEverywhere();
+    toast.success("Account created! Please sign in to continue.");
+    const params2 = new URLSearchParams({ registered: "1", email: email.trim() });
+    if (redirect) params2.set("redirect", redirect);
+    hardNavigate(`/sign-in?${params2}`);
   }
 
   return (
