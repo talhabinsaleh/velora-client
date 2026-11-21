@@ -1,6 +1,7 @@
 import { CalendarCheck2, CreditCard, Search, Sparkles } from "lucide-react";
 import Image from "next/image";
 import interior from "@/public/images/interior2.jpg";
+import Reveal from "@/components/Reveal";
 import SectionHeading from "./SectionHeading";
 
 const STEPS = [
@@ -14,7 +15,7 @@ export default function HowItWorks() {
   return (
     <section id="how-it-works" className="scroll-mt-20 py-20 sm:py-28">
       <div className="container-x grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-        <div>
+        <Reveal>
           <SectionHeading
             eyebrow="How it works"
             title={
@@ -41,11 +42,11 @@ export default function HowItWorks() {
               </li>
             ))}
           </ol>
-        </div>
+        </Reveal>
 
-        <div className="relative">
-          <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] shadow-lift sm:aspect-[5/5]">
-            <Image src={interior} alt="Velora's warm salon floor with styling stations" fill placeholder="blur" sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" />
+        <Reveal delay={120} className="relative">
+          <div className="group arch relative aspect-[4/5] overflow-hidden shadow-lift sm:aspect-[5/5.4]">
+            <Image src={interior} alt="Velora's warm salon floor with styling stations" fill placeholder="blur" sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover transition duration-[1.4s] ease-out group-hover:scale-105" />
           </div>
           <div className="absolute -bottom-6 left-4 max-w-[17rem] rounded-2xl border border-line bg-white p-4 shadow-lift sm:-left-6">
             <div className="flex items-center gap-3">
@@ -62,7 +63,7 @@ export default function HowItWorks() {
             <p className="font-display text-3xl text-gold-soft">10</p>
             <p className="text-xs text-white/70">time slots every day</p>
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

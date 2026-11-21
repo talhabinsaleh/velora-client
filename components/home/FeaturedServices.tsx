@@ -3,6 +3,7 @@ import Link from "next/link";
 import ServiceCard from "@/components/ServiceCard";
 import { EmptyState } from "@/components/States";
 import { getFeaturedServices } from "@/lib/server-api";
+import Reveal from "@/components/Reveal";
 import SectionHeading from "./SectionHeading";
 
 export default async function FeaturedServices() {
@@ -10,6 +11,7 @@ export default async function FeaturedServices() {
 
   return (
     <section className="container-x py-20 sm:py-28">
+      <Reveal>
       <SectionHeading
         eyebrow="Featured services"
         title={
@@ -24,6 +26,7 @@ export default async function FeaturedServices() {
           </Link>
         }
       />
+      </Reveal>
 
       <div className="mt-12">
         {services === null ? (
@@ -37,7 +40,9 @@ export default async function FeaturedServices() {
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {services.slice(0, 6).map((service, i) => (
-              <ServiceCard key={service._id} service={service} priority={i < 3} />
+              <Reveal key={service._id} delay={(i % 3) * 90}>
+                <ServiceCard service={service} />
+              </Reveal>
             ))}
           </div>
         )}

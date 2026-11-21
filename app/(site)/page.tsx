@@ -3,15 +3,18 @@ import Categories from "@/components/home/Categories";
 import FeaturedServices, { FeaturedServicesSkeleton } from "@/components/home/FeaturedServices";
 import Hero from "@/components/home/Hero";
 import HowItWorks from "@/components/home/HowItWorks";
+import { getCategorySummaries } from "@/lib/server-api";
 import VisitUs, { CallToAction } from "@/components/home/VisitUs";
 
 // Always show the latest services (an admin can add or hide one at any time)
 export const dynamic = "force-dynamic";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const { data: categories } = await getCategorySummaries();
+  const serviceCount = categories ? categories.reduce((sum, c) => sum + c.count, 0) : null;
   return (
     <>
-      <Hero />
+      <Hero serviceCount={serviceCount} />
       <Suspense fallback={<FeaturedServicesSkeleton />}>
         <FeaturedServices />
       </Suspense>

@@ -63,11 +63,11 @@ export default function Navbar({ initialUser }: { initialUser: NavUser | null })
           aria-label="Main"
           className={`relative mx-auto flex items-center justify-between gap-4 transition-all duration-500 ease-out ${
             floating
-              ? "container-x h-20 border-b border-white/10 text-white"
+              ? "container-x h-20 border-b border-ink/[0.07] text-ink"
               : "h-[3.75rem] max-w-5xl rounded-full border border-line/70 bg-white/75 pr-2 pl-4 text-ink shadow-[0_18px_40px_-22px_rgb(31_25_21/0.55),inset_0_1px_0_rgb(255_255_255/0.8)] backdrop-blur-xl backdrop-saturate-150 sm:pl-5"
           }`}
         >
-          <Logo tone={floating ? "light" : "dark"} />
+          <Logo />
 
           <ul className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 md:flex">
             {links.map((link) => {
@@ -78,7 +78,7 @@ export default function Navbar({ initialUser }: { initialUser: NavUser | null })
                     href={link.href}
                     aria-current={active ? "page" : undefined}
                     className={`group relative flex flex-col items-center px-3.5 py-2 text-sm font-semibold transition-colors ${
-                      active ? (floating ? "text-white" : "text-ink") : floating ? "text-white/70 hover:text-white" : "text-muted hover:text-ink"
+                      active ? "text-ink" : "text-muted hover:text-ink"
                     }`}
                   >
                     {link.label}
@@ -104,7 +104,7 @@ export default function Navbar({ initialUser }: { initialUser: NavUser | null })
                   </Link>
                 )}
                 <div className="hidden md:block">
-                  <UserMenu user={user} light={floating} />
+                  <UserMenu user={user} light={false} />
                 </div>
               </>
             ) : (
@@ -113,12 +113,12 @@ export default function Navbar({ initialUser }: { initialUser: NavUser | null })
                   href="/sign-in"
                   aria-current={isActive(pathname, "/sign-in") ? "page" : undefined}
                   className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
-                    floating ? "text-white/85 hover:text-white" : isActive(pathname, "/sign-in") ? "text-ink" : "text-muted hover:text-ink"
+                    isActive(pathname, "/sign-in") ? "text-ink" : "text-muted hover:text-ink"
                   }`}
                 >
                   Sign In
                 </Link>
-                <Link href="/sign-up" className={`btn btn-sm ${floating ? "btn-light" : "btn-dark"}`}>
+                <Link href="/sign-up" className="btn btn-sm btn-dark">
                   Sign Up <span className="btn-chip"><ArrowRight /></span>
                 </Link>
               </div>
@@ -130,7 +130,7 @@ export default function Navbar({ initialUser }: { initialUser: NavUser | null })
               aria-label="Open menu"
               aria-expanded={open}
               className={`inline-flex size-11 cursor-pointer items-center justify-center rounded-full transition md:hidden ${
-                floating ? "border border-white/25 bg-white/10 text-white backdrop-blur" : "bg-ink text-cream"
+                floating ? "border border-line bg-white text-ink" : "bg-ink text-cream"
               }`}
             >
               <Menu className="size-5" />

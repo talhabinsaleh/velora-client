@@ -104,6 +104,13 @@ export default function Footer({ signedIn }: { signedIn: boolean }) {
         </div>
       </div>
 
+      {/* oversized wordmark */}
+      <div aria-hidden className="pointer-events-none relative -mb-[3vw] overflow-hidden select-none">
+        <p className="bg-gradient-to-b from-white/[0.09] to-white/0 bg-clip-text text-center font-display text-[24vw] leading-[0.8] font-medium tracking-[-0.05em] text-transparent">
+          Velora
+        </p>
+      </div>
+
       <div className="relative border-t border-white/10">
         <div className="container-x flex flex-col items-center justify-between gap-3 py-6 text-xs text-white/50 sm:flex-row">
           <p>© {new Date().getFullYear()} Velora Salon &amp; Spa. All rights reserved.</p>
