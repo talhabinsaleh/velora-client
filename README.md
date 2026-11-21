@@ -26,12 +26,18 @@ This repository is the **Next.js client**. The REST API lives in [velora-server]
 - Manage Users: view customer details and history, block and unblock (blocked users are signed out immediately)
 - Transactions: read-only Stripe payment records with session reference, amount, currency and status
 
+**Website**
+- Home: full-screen hero slideshow with a live "Popular right now" card, service search, six featured services, an interactive category accordion, How It Works, the salon promise and visit details
+- Browse Services, About (story, values, gallery, booking steps) and Contact (contact cards, map, message form, FAQ) pages
+- Clean category links such as `/services?category=haircut-styling`
+- Navbar floats as a glass pill over photo banners and turns into a full-width bar on scroll; every new page opens at the top
+
 **Platform**
 - Better Auth: email + password (min 6 chars, one uppercase, one lowercase) and Google sign-in, optional profile image (upload or URL)
 - Admins can never be created through sign-up (`role` and `isBlocked` are server-only fields)
 - A signed JWT in an HTTP-only cookie is verified by Express middleware on every protected API, together with the user's role
 - Dashboards are separated by role on the server; opening another role's URL shows a 403 page
-- Navbar changes from a floating glass bar to a solid bar on scroll and updates instantly when you sign in or out
+- Navbar updates instantly when you sign in or out
 - Meaningful loaders and skeletons, toast notifications (no `alert()`), friendly 404 / error pages, confirmation dialogs and status badges
 - Fully responsive (mobile menu, mobile appointment cards, scrollable tables)
 
@@ -82,7 +88,7 @@ GOOGLE_CLIENT_SECRET
 
 ```
 app/
-  (site)/            public website: home, services, sign in/up, payment pages
+  (site)/            public website: home, services, about, contact, sign in/up, payment pages
   dashboard/         role-based dashboards (customer/*, admin/*)
   api/auth/          Better Auth handler
   api/session-token/ issues the JWT the API verifies
