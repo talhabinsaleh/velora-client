@@ -108,7 +108,7 @@ export default function DashboardShell({ user: initial, children }: { user: Shel
               href={item.href}
               aria-current={active ? "page" : undefined}
               className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${
-                active ? "bg-gold text-white shadow-[0_10px_24px_-14px_rgb(181_138_84)]" : "hover:bg-white/[0.07] hover:text-white"
+                active ? "bg-gold text-white shadow-[0_10px_24px_-14px_rgb(200_115_92)]" : "hover:bg-white/[0.07] hover:text-white"
               }`}
             >
               <item.Icon className={`size-[18px] ${active ? "text-white" : "text-white/50 group-hover:text-gold-soft"}`} />

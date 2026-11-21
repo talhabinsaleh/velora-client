@@ -12,7 +12,7 @@ export default function ServiceCard({ service, priority = false }: { service: Se
     <Tilt className="h-full">
     <article
       data-cursor="View"
-      className="group relative flex h-full flex-col rounded-[2rem] border border-line/70 bg-white p-3 shadow-soft hover:border-gold/40 hover:shadow-[0_34px_70px_-32px_rgb(31_25_21/0.5)]"
+      className="group relative flex h-full flex-col rounded-[2rem] border border-line/70 bg-white p-3 shadow-soft hover:border-gold/40 hover:shadow-[0_34px_70px_-32px_rgb(19_35_30/0.5)]"
     >
       <span aria-hidden className="fx-glare" />
       <Link href={href} tabIndex={-1} aria-hidden className="arch relative block aspect-[4/4.4] overflow-hidden bg-sand">

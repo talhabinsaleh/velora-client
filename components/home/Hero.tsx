@@ -1,182 +1,122 @@
-import { ArrowDown, ArrowRight, Clock3, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Clock3, ShieldCheck, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import heroImage from "@/public/images/hero.jpg";
-import backdrop from "@/public/images/interior2.jpg";
+import slide1 from "@/public/images/hero-1.jpg";
+import slide2 from "@/public/images/hero-2.jpg";
+import slide3 from "@/public/images/hero-3.jpg";
 import { CATEGORIES } from "@/lib/constants";
-import Parallax from "@/components/fx/Parallax";
+import { formatDuration, formatPrice } from "@/lib/format";
+import type { Service } from "@/lib/types";
 import HeroSearch from "./HeroSearch";
+import HeroSlides from "./HeroSlides";
 
-// Text that runs around the slowly turning badge next to the arch
-function RotatingBadge() {
+const SLIDES = [
+  { src: slide1, alt: "Bright Velora styling floor with arched mirrors and marble", label: "The salon" },
+  { src: slide2, alt: "Stylist finishing a blow-dry for a guest", label: "Hair" },
+  { src: slide3, alt: "Calm reception with an arched doorway", label: "Welcome" },
+];
+
+export default function Hero({ serviceCount, popular }: { serviceCount: number | null; popular: Service[] }) {
   return (
-    <div className="relative size-28 sm:size-32">
-      <svg viewBox="0 0 120 120" className="absolute inset-0 size-full animate-spin-slow text-ink" aria-hidden>
-        <defs>
-          <path id="badge-circle" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0" />
-        </defs>
-        <text className="fill-current text-[10px] font-semibold uppercase">
-          <textPath href="#badge-circle" textLength="286" lengthAdjust="spacing">
-            Book online · Relax · Glow · Repeat ·
-          </textPath>
-        </text>
-      </svg>
-      <span className="absolute inset-0 m-auto flex size-14 items-center justify-center rounded-full bg-ink text-gold-soft shadow-lift">
-        <Sparkles className="size-6" />
-      </span>
-    </div>
-  );
-}
+    <section className="relative isolate">
+      <div className="relative isolate flex min-h-[100svh] items-center overflow-hidden bg-ink text-white">
+        <HeroSlides slides={SLIDES} />
+        {/* cinematic grade: deep emerald on the left for the copy, clear on the right for the photo */}
+        <div aria-hidden className="absolute inset-0 -z-10 bg-[linear-gradient(100deg,rgb(12_24_20/0.9)_0%,rgb(12_24_20/0.68)_42%,rgb(12_24_20/0.18)_100%)]" />
+        <div aria-hidden className="absolute inset-x-0 bottom-0 -z-10 h-64 bg-gradient-to-t from-ink via-ink/50 to-transparent" />
+        <div aria-hidden className="absolute inset-x-0 top-0 -z-10 h-40 bg-gradient-to-b from-ink/60 to-transparent" />
 
-export default function Hero({ serviceCount }: { serviceCount: number | null }) {
-  return (
-    <section className="grain relative isolate overflow-hidden bg-cream">
-      {/* Salon-themed background photo, softened so the copy stays crisp */}
-      <Image src={backdrop} alt="" fill priority placeholder="blur" sizes="100vw" className="-z-30 object-cover opacity-[0.16] saturate-[0.6]" />
-      <div aria-hidden className="absolute inset-0 -z-20 bg-[linear-gradient(105deg,var(--color-cream)_35%,rgb(251_248_244/0.82)_65%,rgb(251_248_244/0.55))]" />
-      {/* soft light behind the composition */}
-      <div aria-hidden className="absolute -top-40 right-[-10%] -z-10 size-[42rem] rounded-full bg-gold-soft/70 blur-[120px]" />
-      <div aria-hidden className="absolute bottom-0 left-[-15%] -z-10 size-[30rem] rounded-full bg-blush blur-[110px]" />
-
-      <div className="container-x grid items-center gap-14 pt-32 pb-14 lg:grid-cols-[1.08fr_0.92fr] lg:gap-10 lg:pt-36 lg:pb-16">
-        {/* Copy */}
-        <div className="relative">
-          <p className="inline-flex animate-fade-up items-center gap-2.5 rounded-full border border-line bg-white/70 py-1.5 pr-4 pl-2 text-xs font-semibold text-ink-3 shadow-soft backdrop-blur">
-            <span className="relative flex size-2.5">
-              <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-60" />
-              <span className="relative inline-flex size-2.5 rounded-full bg-emerald-500" />
-            </span>
-            Now taking appointments · Banani, Dhaka
-          </p>
-
-          <h1 className="mt-7 font-display text-[2.9rem] leading-[1] font-medium tracking-[-0.035em] text-ink [animation-delay:80ms] sm:text-[4.2rem] xl:text-[4.7rem]">
-            <span className="line-mask line-in">
-              <span>Beauty, booked</span>
-            </span>
-            <span className="line-mask line-in [&>span]:[animation-delay:120ms]">
-              <span>
-              in{" "}
-              <span className="relative inline-block h-[0.8em] w-[1.75em] translate-y-[0.04em] overflow-hidden rounded-full align-baseline ring-4 ring-white">
-                <Image src="/images/auth.jpg" alt="" fill sizes="180px" className="object-cover" />
-              </span>{" "}
-              a few
+        <div className="container-x grid w-full items-center gap-12 pt-32 pb-48 lg:grid-cols-[1.25fr_0.75fr] lg:pb-52">
+          <div className="max-w-2xl">
+            <p className="inline-flex animate-fade-up items-center gap-2.5 rounded-full border border-white/20 bg-white/10 py-1.5 pr-4 pl-2 text-xs font-semibold backdrop-blur-md">
+              <span className="relative flex size-2.5">
+                <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-300 opacity-70" />
+                <span className="relative inline-flex size-2.5 rounded-full bg-emerald-400" />
               </span>
-            </span>
-            <span className="line-mask line-in [&>span]:[animation-delay:240ms]">
-              <em className="font-normal text-gold-deep">gentle taps.</em>
-            </span>
-          </h1>
+              Now taking appointments · Banani, Dhaka
+            </p>
 
-          <p className="mt-7 max-w-lg animate-fade-up text-base leading-relaxed text-ink-3 [animation-delay:160ms] sm:text-lg">
-            Hair, skin, nails and spa rituals by Velora&apos;s senior stylists. Choose a service, request a time that suits you and pay
-            securely once we confirm.
-          </p>
-
-          <div className="mt-9 flex animate-fade-up flex-wrap items-center gap-x-6 gap-y-4 [animation-delay:240ms]">
-            <Link href="/services" data-magnetic className="btn btn-dark btn-lg">
-              Explore Salon Services <span className="btn-chip"><ArrowRight /></span>
-            </Link>
-            <Link href="#how-it-works" className="group inline-flex items-center gap-2 text-sm font-semibold text-ink">
-              <span className="flex size-10 items-center justify-center rounded-full border border-line bg-white transition group-hover:border-ink group-hover:bg-ink group-hover:text-cream">
-                <ArrowDown className="size-4 transition group-hover:translate-y-0.5" />
+            <h1 className="mt-7 font-display text-[3rem] leading-[1] font-medium tracking-[-0.035em] sm:text-7xl xl:text-[5.4rem]">
+              <span className="line-mask line-in">
+                <span>Where every visit</span>
               </span>
-              <span className="bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1px] bg-left-bottom bg-no-repeat pb-0.5 transition-[background-size] duration-300 group-hover:bg-[length:100%_1px]">
+              <span className="line-mask line-in [&>span]:[animation-delay:140ms]">
+                <em className="font-normal text-gold-soft">feels like a ritual.</em>
+              </span>
+            </h1>
+
+            <p className="mt-7 max-w-xl animate-fade-up text-base leading-relaxed text-white/75 [animation-delay:200ms] sm:text-lg">
+              Hair, skin, nails and spa care by Velora&apos;s senior stylists. Explore the menu, request a time that suits you and pay
+              securely once we confirm.
+            </p>
+
+            <div className="mt-9 flex animate-fade-up flex-wrap items-center gap-3 [animation-delay:280ms]">
+              <Link href="/services" data-magnetic className="btn btn-gold btn-lg">
+                Explore Salon Services <span className="btn-chip"><ArrowRight /></span>
+              </Link>
+              <Link href="#how-it-works" className="btn btn-glass btn-lg">
                 How it works
-              </span>
-            </Link>
-          </div>
-
-          <dl className="mt-12 grid max-w-lg animate-fade-up grid-cols-3 divide-x divide-line rounded-3xl border border-line bg-white/60 py-4 backdrop-blur [animation-delay:320ms]">
-            {[
-              [serviceCount ? `${serviceCount}+` : "20+", "Signature services"],
-              [String(CATEGORIES.length), "Beauty categories"],
-              ["10", "Time slots a day"],
-            ].map(([value, label]) => (
-              <div key={label} className="px-4 text-center sm:px-5">
-                <dt className="sr-only">{label}</dt>
-                <dd className="font-display text-3xl text-ink">{value}</dd>
-                <dd className="mt-0.5 text-[11px] font-medium text-muted sm:text-xs">{label}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-
-        {/* Arch composition */}
-        <Parallax className="relative mx-auto w-full max-w-[460px] animate-fade-up [animation-delay:200ms] lg:max-w-none">
-          <div data-depth="14" className="group arch relative aspect-[4/5] overflow-hidden bg-sand shadow-[0_40px_80px_-40px_rgb(31_25_21/0.55)] ring-1 ring-ink/5 sm:aspect-[5/6] lg:ml-auto lg:w-[88%]">
-            <Image
-              src={heroImage}
-              alt="Warm, softly lit Velora salon interior with styling chairs and mirrors"
-              fill
-              priority
-              placeholder="blur"
-              sizes="(min-width: 1024px) 42vw, 90vw"
-              className="object-cover transition duration-[1.6s] ease-out group-hover:scale-[1.06]"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-ink/40 via-transparent to-transparent" />
-          </div>
-
-          {/* small inset arch */}
-          <div data-depth="-26" className="arch absolute bottom-6 -left-2 hidden aspect-[3/4] w-[34%] animate-float-late overflow-hidden border-[6px] border-cream shadow-lift sm:block lg:-left-4">
-            <Image src={CATEGORIES[3].image} alt="" fill sizes="200px" className="object-cover" />
-          </div>
-
-          <div data-depth="34" className="absolute -top-6 right-0 sm:-right-4 lg:-top-8">
-            <RotatingBadge />
-          </div>
-
-          <div data-depth="-40" className="absolute top-[18%] -left-3 animate-float rounded-2xl border border-white/60 bg-white/80 p-3.5 pr-5 shadow-lift backdrop-blur-xl sm:-left-8">
-            <div className="flex items-center gap-3">
-              <span className="flex size-10 items-center justify-center rounded-xl bg-gold-soft text-gold-deep">
-                <Clock3 className="size-5" />
-              </span>
-              <div>
-                <p className="text-sm font-semibold text-ink">Open every day</p>
-                <p className="text-xs text-muted">10:00 AM – 8:00 PM</p>
-              </div>
+              </Link>
             </div>
-          </div>
 
-          <div data-depth="30" className="absolute right-3 bottom-8 animate-float-late rounded-2xl border border-white/60 bg-white/85 p-3.5 pr-5 shadow-lift backdrop-blur-xl sm:-right-6">
-            <div className="flex items-center gap-3">
-              <span className="flex size-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
-                <ShieldCheck className="size-5" />
-              </span>
-              <div>
-                <p className="text-sm font-semibold text-ink">Pay after we confirm</p>
-                <p className="text-xs text-muted">Secure Stripe checkout</p>
-              </div>
-            </div>
-          </div>
-        </Parallax>
-      </div>
-
-      {/* Search */}
-      <div className="container-x relative z-10 pb-14">
-        <div className="mx-auto max-w-4xl animate-fade-up [animation-delay:380ms]">
-          <HeroSearch />
-        </div>
-      </div>
-
-      {/* Category ribbon */}
-      <div className="relative overflow-hidden border-y border-ink/10 bg-ink py-4 text-cream">
-        <div className="group flex w-max animate-marquee hover:[animation-play-state:paused]">
-          {[0, 1].map((copy) => (
-            <ul key={copy} aria-hidden={copy === 1} className="flex shrink-0 items-center">
-              {CATEGORIES.map((c) => (
-                <li key={c.slug} className="flex items-center">
-                  <Link
-                    href={`/services?category=${encodeURIComponent(c.name)}`}
-                    tabIndex={copy === 1 ? -1 : undefined}
-                    className="px-7 font-display text-2xl font-normal italic transition-colors hover:text-gold-soft sm:text-3xl"
-                  >
-                    {c.name}
-                  </Link>
-                  <Sparkles className="size-4 text-gold" aria-hidden />
-                </li>
+            <dl className="mt-12 flex animate-fade-up flex-wrap gap-x-10 gap-y-5 [animation-delay:360ms]">
+              {[
+                [serviceCount ? `${serviceCount}+` : "20+", "Signature services"],
+                [String(CATEGORIES.length), "Beauty categories"],
+                ["10", "Time slots every day"],
+              ].map(([value, label]) => (
+                <div key={label} className="border-l border-white/20 pl-4">
+                  <dd className="font-display text-4xl text-white">{value}</dd>
+                  <dt className="mt-1 text-xs font-medium tracking-wide text-white/60 uppercase">{label}</dt>
+                </div>
               ))}
-            </ul>
-          ))}
+            </dl>
+          </div>
+
+          {/* Live glass card: services straight from the database */}
+          {popular.length > 0 && (
+            <aside className="hidden animate-fade-up rounded-[2rem] border border-white/15 bg-white/[0.07] p-5 shadow-[0_40px_80px_-40px_rgb(0_0_0/0.7)] backdrop-blur-2xl [animation-delay:420ms] lg:block">
+              <div className="flex items-center justify-between px-2 pt-1 pb-4">
+                <p className="text-xs font-semibold tracking-[0.18em] text-white/70 uppercase">Popular right now</p>
+                <span className="flex items-center gap-1.5 text-[11px] font-medium text-white/60">
+                  <Star className="size-3.5 fill-gold-soft text-gold-soft" /> Velora picks
+                </span>
+              </div>
+              <ul className="space-y-1.5">
+                {popular.slice(0, 3).map((s) => (
+                  <li key={s._id}>
+                    <Link href={`/services/${s._id}`} className="group flex items-center gap-4 rounded-2xl p-2.5 transition hover:bg-white/10">
+                      <span className="relative size-16 shrink-0 overflow-hidden rounded-xl">
+                        <Image src={s.image} alt="" fill sizes="64px" className="object-cover transition duration-700 group-hover:scale-110" />
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate font-display text-lg leading-tight">{s.serviceName}</span>
+                        <span className="mt-0.5 flex items-center gap-1.5 text-xs text-white/60">
+                          {s.category} · <Clock3 className="size-3" /> {formatDuration(s.duration)}
+                        </span>
+                      </span>
+                      <span className="text-right">
+                        <span className="block font-display text-lg">{formatPrice(s.price)}</span>
+                        <ArrowUpRight className="ml-auto size-4 text-gold-soft transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-4 flex items-center gap-3 rounded-2xl border border-white/10 bg-ink/40 px-4 py-3 text-sm text-white/75">
+                <ShieldCheck className="size-5 shrink-0 text-emerald-300" />
+                Request now, pay securely after the salon confirms.
+              </div>
+            </aside>
+          )}
+        </div>
+      </div>
+
+      <div className="relative z-10 -mt-24">
+        <div className="container-x">
+          <div className="mx-auto max-w-4xl">
+            <HeroSearch />
+          </div>
         </div>
       </div>
     </section>

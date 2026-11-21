@@ -41,9 +41,9 @@ export default function CategoryAccordion({ summaries }: { summaries: CategorySu
                 alt=""
                 fill
                 sizes="(min-width: 1024px) 40vw, 1px"
-                className={`-z-20 object-cover transition duration-[1.2s] ease-out ${open ? "scale-100" : "scale-110 grayscale-[35%]"}`}
+                className={`-z-20 object-cover transition duration-[1.2s] ease-out ${open ? "scale-100" : "scale-105"}`}
               />
-              <div className={`absolute inset-0 -z-10 transition duration-700 ${open ? "bg-gradient-to-t from-ink/85 via-ink/25 to-transparent" : "bg-ink/55"}`} />
+              <div className={`absolute inset-0 -z-10 transition duration-700 ${open ? "bg-gradient-to-t from-ink/80 via-ink/15 to-transparent" : "bg-gradient-to-t from-ink/75 via-ink/35 to-ink/20"}`} />
 
               {/* collapsed: number and vertical label */}
               <div className={`absolute inset-0 flex flex-col items-center justify-between py-7 text-cream transition-opacity duration-300 ${open ? "opacity-0" : "opacity-100 delay-200"}`}>

@@ -28,13 +28,13 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Velora — Salon & Spa Appointments",
     description: "Explore salon services, request a time that suits you and pay securely online.",
-    images: ["/images/hero.jpg"],
+    images: ["/images/hero-1.jpg"],
     type: "website",
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1f1915",
+  themeColor: "#13231e",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

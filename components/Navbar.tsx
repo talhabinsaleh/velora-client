@@ -15,9 +15,12 @@ import { hardNavigate } from "@/lib/navigation";
 const PUBLIC_LINKS = [
   { href: "/", label: "Home" },
   { href: "/services", label: "Browse Services" },
+  { href: "/#how-it-works", label: "How It Works" },
+  { href: "/#contact", label: "Contact" },
 ];
 
 function isActive(pathname: string, href: string) {
+  if (href.includes("#")) return false;
   return href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
 }
 
@@ -56,20 +59,20 @@ export default function Navbar({ initialUser }: { initialUser: NavUser | null })
 
   return (
     <>
-      {/* Over the hero the bar is open and transparent. Once you scroll (and on every other
-          page) it tucks into a compact floating glass pill. */}
-      <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ease-out ${floating ? "px-0 pt-0" : "px-3 pt-3"}`}>
+      {/* Over the hero: a floating glass pill. Once you scroll (and on every other page) it opens
+          into a full-width bar. */}
+      <header className={`fixed inset-x-0 top-0 z-50 transition-[padding] duration-500 ease-out ${floating ? "px-3 pt-3 sm:px-6 sm:pt-5" : "px-0 pt-0"}`}>
         <nav
           aria-label="Main"
-          className={`relative mx-auto flex items-center justify-between gap-4 transition-all duration-500 ease-out ${
+          className={`relative mx-auto flex h-16 items-center justify-between gap-4 transition-all duration-500 ease-out ${
             floating
-              ? "container-x h-20 border-b border-ink/[0.07] text-ink"
-              : "h-[3.75rem] max-w-5xl rounded-full border border-line/70 bg-white/75 pr-2 pl-4 text-ink shadow-[0_18px_40px_-22px_rgb(31_25_21/0.55),inset_0_1px_0_rgb(255_255_255/0.8)] backdrop-blur-xl backdrop-saturate-150 sm:pl-5"
+              ? "max-w-6xl rounded-full border border-white/20 bg-white/[0.08] pr-2 pl-4 text-white shadow-[0_10px_40px_-14px_rgb(0_0_0/0.5)] backdrop-blur-xl sm:pl-5"
+              : "max-w-full rounded-none border-b border-line/80 bg-cream/90 px-4 text-ink shadow-[0_8px_30px_-22px_rgb(19_35_30/0.55)] backdrop-blur-xl sm:px-6 lg:px-[max(2rem,calc((100vw-80rem)/2+2rem))]"
           }`}
         >
-          <Logo />
+          <Logo tone={floating ? "light" : "dark"} />
 
-          <ul className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 md:flex">
+          <ul className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-0.5 lg:flex">
             {links.map((link) => {
               const active = isActive(pathname, link.href);
               return (
@@ -77,16 +80,21 @@ export default function Navbar({ initialUser }: { initialUser: NavUser | null })
                   <Link
                     href={link.href}
                     aria-current={active ? "page" : undefined}
-                    className={`group relative flex flex-col items-center px-3.5 py-2 text-sm font-semibold transition-colors ${
-                      active ? "text-ink" : "text-muted hover:text-ink"
+                    className={`group relative flex flex-col items-center rounded-full px-3.5 py-2 text-sm font-semibold transition-colors ${
+                      active
+                        ? floating
+                          ? "text-white"
+                          : "text-ink"
+                        : floating
+                          ? "text-white/75 hover:text-white"
+                          : "text-muted hover:text-ink"
                     }`}
                   >
                     {link.label}
-                    {/* gold dot marks the current page, a short line previews it on hover */}
                     <span
                       aria-hidden
-                      className={`absolute -bottom-0.5 h-1 rounded-full bg-gold transition-all duration-300 ${
-                        active ? "w-1 opacity-100" : "w-0 opacity-0 group-hover:w-4 group-hover:opacity-60"
+                      className={`absolute -bottom-0.5 h-[3px] rounded-full transition-all duration-300 ${floating ? "bg-gold-soft" : "bg-gold"} ${
+                        active ? "w-5 opacity-100" : "w-0 opacity-0 group-hover:w-3 group-hover:opacity-70"
                       }`}
                     />
                   </Link>
@@ -99,26 +107,26 @@ export default function Navbar({ initialUser }: { initialUser: NavUser | null })
             {user ? (
               <>
                 {user.role !== "admin" && (
-                  <Link href="/services" className="btn btn-gold btn-sm hidden lg:inline-flex">
+                  <Link href="/services" className="btn btn-gold btn-sm hidden xl:inline-flex">
                     Book now <span className="btn-chip"><ArrowRight /></span>
                   </Link>
                 )}
-                <div className="hidden md:block">
-                  <UserMenu user={user} light={false} />
+                <div className="hidden lg:block">
+                  <UserMenu user={user} light={floating} />
                 </div>
               </>
             ) : (
-              <div className="hidden items-center gap-1 md:flex">
+              <div className="hidden items-center gap-1 lg:flex">
                 <Link
                   href="/sign-in"
                   aria-current={isActive(pathname, "/sign-in") ? "page" : undefined}
                   className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
-                    isActive(pathname, "/sign-in") ? "text-ink" : "text-muted hover:text-ink"
+                    floating ? "text-white/85 hover:text-white" : isActive(pathname, "/sign-in") ? "text-ink" : "text-muted hover:text-ink"
                   }`}
                 >
                   Sign In
                 </Link>
-                <Link href="/sign-up" data-magnetic className="btn btn-sm btn-dark">
+                <Link href="/sign-up" data-magnetic className={`btn btn-sm ${floating ? "btn-light" : "btn-dark"}`}>
                   Sign Up <span className="btn-chip"><ArrowRight /></span>
                 </Link>
               </div>
@@ -129,8 +137,8 @@ export default function Navbar({ initialUser }: { initialUser: NavUser | null })
               onClick={() => setOpen(true)}
               aria-label="Open menu"
               aria-expanded={open}
-              className={`inline-flex size-11 cursor-pointer items-center justify-center rounded-full transition md:hidden ${
-                floating ? "border border-line bg-white text-ink" : "bg-ink text-cream"
+              className={`inline-flex size-11 cursor-pointer items-center justify-center rounded-full transition lg:hidden ${
+                floating ? "border border-white/25 bg-white/10 text-white" : "bg-ink text-cream"
               }`}
             >
               <Menu className="size-5" />
@@ -139,8 +147,8 @@ export default function Navbar({ initialUser }: { initialUser: NavUser | null })
         </nav>
       </header>
 
-      {/* Pages without the full-screen hero start below the floating bar */}
-      {!overHero && <div aria-hidden className="h-[5.25rem]" />}
+      {/* Pages without the full-screen hero start below the fixed bar */}
+      {!overHero && <div aria-hidden className="h-16" />}
 
       <MobileMenu open={open} onClose={() => setOpen(false)} links={links} pathname={pathname} user={user} />
     </>
@@ -167,7 +175,7 @@ function MobileMenu({
   }
 
   return (
-    <div className={`fixed inset-0 z-[60] md:hidden ${open ? "" : "pointer-events-none"}`} aria-hidden={!open}>
+    <div className={`fixed inset-0 z-[60] lg:hidden ${open ? "" : "pointer-events-none"}`} aria-hidden={!open}>
       <div
         onClick={onClose}
         className={`absolute inset-0 bg-ink/50 backdrop-blur-sm transition-opacity duration-300 ${open ? "opacity-100" : "opacity-0"}`}
@@ -204,6 +212,7 @@ function MobileMenu({
               <Link
                 key={link.href}
                 href={link.href}
+                onClick={onClose}
                 style={{ animationDelay: `${i * 50}ms` }}
                 className={`flex items-center justify-between rounded-2xl px-4 py-3.5 font-display text-2xl ${open ? "animate-fade-up" : ""} ${
                   active ? "bg-white text-ink shadow-soft" : "text-ink-3"

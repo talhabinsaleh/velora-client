@@ -1,6 +1,6 @@
 import { CalendarCheck2, CreditCard, Search, Sparkles } from "lucide-react";
 import Image from "next/image";
-import interior from "@/public/images/interior2.jpg";
+import interior from "@/public/images/steps.jpg";
 import Reveal from "@/components/Reveal";
 import SectionHeading from "./SectionHeading";
 
@@ -46,7 +46,7 @@ export default function HowItWorks() {
 
         <Reveal delay={120} className="relative">
           <div className="img-reveal group arch relative aspect-[4/5] overflow-hidden shadow-lift sm:aspect-[5/5.4]">
-            <Image src={interior} alt="Velora's warm salon floor with styling stations" fill placeholder="blur" sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover transition duration-[1.4s] ease-out group-hover:scale-105" />
+            <Image src={interior} alt="Velora stylist adding soft waves for a guest" fill placeholder="blur" sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover transition duration-[1.4s] ease-out group-hover:scale-105" />
           </div>
           <div className="absolute -bottom-6 left-4 max-w-[17rem] rounded-2xl border border-line bg-white p-4 shadow-lift sm:-left-6">
             <div className="flex items-center gap-3">

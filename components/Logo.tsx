@@ -12,8 +12,8 @@ export function LogoMark({ className = "size-9" }: { className?: string }) {
     <svg viewBox="0 0 40 40" className={className} aria-hidden="true">
       <circle cx="20" cy="20" r="19" fill="currentColor" opacity="0.08" />
       <circle cx="20" cy="20" r="18.25" fill="none" stroke="currentColor" strokeOpacity="0.35" strokeWidth="1" />
-      <path d="M11.5 12.5c2.6 0 4.2 1.4 5.3 4.1L20 25l3.2-8.4c1-2.7 2.7-4.1 5.3-4.1" fill="none" stroke="#b58a54" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M20 25c-.9 1.9-1.2 3.4-.2 4.9 1.6-.8 2.4-2.4 1.8-4.6" fill="#b58a54" />
+      <path d="M11.5 12.5c2.6 0 4.2 1.4 5.3 4.1L20 25l3.2-8.4c1-2.7 2.7-4.1 5.3-4.1" fill="none" stroke="#c8735c" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M20 25c-.9 1.9-1.2 3.4-.2 4.9 1.6-.8 2.4-2.4 1.8-4.6" fill="#c8735c" />
     </svg>
   );
 }

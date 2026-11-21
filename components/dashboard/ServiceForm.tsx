@@ -189,7 +189,7 @@ export default function ServiceForm({ service }: { service?: Service }) {
                   key={s}
                   className={`flex cursor-pointer items-start gap-3 rounded-2xl border p-4 transition ${status === s ? "border-ink bg-sand/50" : "border-line hover:border-ink/30"}`}
                 >
-                  <input type="radio" name="status" value={s} checked={status === s} onChange={() => setStatus(s)} className="mt-1 accent-[#1f1915]" />
+                  <input type="radio" name="status" value={s} checked={status === s} onChange={() => setStatus(s)} className="mt-1 accent-[#13231e]" />
                   <span>
                     <span className="block font-semibold capitalize">{s}</span>
                     <span className="text-xs text-muted">{s === "active" ? "Shown to customers and bookable" : "Hidden from customers, can't be booked"}</span>

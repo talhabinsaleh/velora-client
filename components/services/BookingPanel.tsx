@@ -204,7 +204,7 @@ export default function BookingPanel({ service }: { service: Service }) {
                     title={taken ? "Already booked" : past ? "This time has passed" : undefined}
                     className={`h-11 cursor-pointer rounded-xl border text-[13px] font-semibold transition disabled:cursor-not-allowed ${
                       active
-                        ? "border-gold bg-gold text-white shadow-[0_8px_20px_-10px_rgb(141_101_53/0.9)]"
+                        ? "border-gold bg-gold text-white shadow-[0_8px_20px_-10px_rgb(157_78_59/0.9)]"
                         : taken || past
                           ? "border-dashed border-line bg-sand/40 text-muted/60 line-through"
                           : "border-line bg-white text-ink hover:border-gold hover:text-gold-deep"

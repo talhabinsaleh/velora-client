@@ -15,7 +15,7 @@ const PROMISES = [
 // Extra home page section: why Velora, plus where to find the salon and when it is open
 export default function VisitUs() {
   return (
-    <section className="bg-ink py-20 text-white sm:py-28">
+    <section id="contact" className="scroll-mt-16 bg-ink py-20 text-white sm:py-28">
       <div className="container-x">
         <div className="grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
           <div>
