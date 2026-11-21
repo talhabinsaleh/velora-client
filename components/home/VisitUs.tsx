@@ -96,7 +96,7 @@ export function CallToAction() {
             text="Create a free account in seconds, request a slot and we'll take it from there."
           />
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link href="/services" className="btn btn-dark btn-lg">
+            <Link href="/services" data-magnetic className="btn btn-dark btn-lg">
               Explore Salon Services <span className="btn-chip"><ArrowRight /></span>
             </Link>
             <Link href="/sign-up" className="btn btn-outline btn-lg">

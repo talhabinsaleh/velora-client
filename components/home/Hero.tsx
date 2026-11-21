@@ -4,6 +4,7 @@ import Link from "next/link";
 import heroImage from "@/public/images/hero.jpg";
 import backdrop from "@/public/images/interior2.jpg";
 import { CATEGORIES } from "@/lib/constants";
+import Parallax from "@/components/fx/Parallax";
 import HeroSearch from "./HeroSearch";
 
 // Text that runs around the slowly turning badge next to the arch
@@ -48,16 +49,22 @@ export default function Hero({ serviceCount }: { serviceCount: number | null }) 
             Now taking appointments · Banani, Dhaka
           </p>
 
-          <h1 className="mt-7 animate-fade-up font-display text-[2.9rem] leading-[1] font-medium tracking-[-0.035em] text-ink [animation-delay:80ms] sm:text-[4.2rem] xl:text-[4.7rem]">
-            <span className="block">Beauty, booked</span>
-            <span className="block">
+          <h1 className="mt-7 font-display text-[2.9rem] leading-[1] font-medium tracking-[-0.035em] text-ink [animation-delay:80ms] sm:text-[4.2rem] xl:text-[4.7rem]">
+            <span className="line-mask line-in">
+              <span>Beauty, booked</span>
+            </span>
+            <span className="line-mask line-in [&>span]:[animation-delay:120ms]">
+              <span>
               in{" "}
-              <span className="relative inline-block h-[0.8em] w-[1.75em] translate-y-[0.04em] overflow-hidden rounded-full align-baseline ring-4 ring-white shadow-lift">
+              <span className="relative inline-block h-[0.8em] w-[1.75em] translate-y-[0.04em] overflow-hidden rounded-full align-baseline ring-4 ring-white">
                 <Image src="/images/auth.jpg" alt="" fill sizes="180px" className="object-cover" />
               </span>{" "}
               a few
+              </span>
             </span>
-            <em className="block font-normal text-gold-deep">gentle taps.</em>
+            <span className="line-mask line-in [&>span]:[animation-delay:240ms]">
+              <em className="font-normal text-gold-deep">gentle taps.</em>
+            </span>
           </h1>
 
           <p className="mt-7 max-w-lg animate-fade-up text-base leading-relaxed text-ink-3 [animation-delay:160ms] sm:text-lg">
@@ -66,7 +73,7 @@ export default function Hero({ serviceCount }: { serviceCount: number | null }) 
           </p>
 
           <div className="mt-9 flex animate-fade-up flex-wrap items-center gap-x-6 gap-y-4 [animation-delay:240ms]">
-            <Link href="/services" className="btn btn-dark btn-lg">
+            <Link href="/services" data-magnetic className="btn btn-dark btn-lg">
               Explore Salon Services <span className="btn-chip"><ArrowRight /></span>
             </Link>
             <Link href="#how-it-works" className="group inline-flex items-center gap-2 text-sm font-semibold text-ink">
@@ -95,8 +102,8 @@ export default function Hero({ serviceCount }: { serviceCount: number | null }) 
         </div>
 
         {/* Arch composition */}
-        <div className="relative mx-auto w-full max-w-[460px] animate-fade-up [animation-delay:200ms] lg:max-w-none">
-          <div className="group arch relative aspect-[4/5] overflow-hidden bg-sand shadow-[0_40px_80px_-40px_rgb(31_25_21/0.55)] ring-1 ring-ink/5 sm:aspect-[5/6] lg:ml-auto lg:w-[88%]">
+        <Parallax className="relative mx-auto w-full max-w-[460px] animate-fade-up [animation-delay:200ms] lg:max-w-none">
+          <div data-depth="14" className="group arch relative aspect-[4/5] overflow-hidden bg-sand shadow-[0_40px_80px_-40px_rgb(31_25_21/0.55)] ring-1 ring-ink/5 sm:aspect-[5/6] lg:ml-auto lg:w-[88%]">
             <Image
               src={heroImage}
               alt="Warm, softly lit Velora salon interior with styling chairs and mirrors"
@@ -110,15 +117,15 @@ export default function Hero({ serviceCount }: { serviceCount: number | null }) 
           </div>
 
           {/* small inset arch */}
-          <div className="arch absolute bottom-6 -left-2 hidden aspect-[3/4] w-[34%] animate-float-late overflow-hidden border-[6px] border-cream shadow-lift sm:block lg:-left-4">
+          <div data-depth="-26" className="arch absolute bottom-6 -left-2 hidden aspect-[3/4] w-[34%] animate-float-late overflow-hidden border-[6px] border-cream shadow-lift sm:block lg:-left-4">
             <Image src={CATEGORIES[3].image} alt="" fill sizes="200px" className="object-cover" />
           </div>
 
-          <div className="absolute -top-6 right-0 sm:-right-4 lg:-top-8">
+          <div data-depth="34" className="absolute -top-6 right-0 sm:-right-4 lg:-top-8">
             <RotatingBadge />
           </div>
 
-          <div className="absolute top-[18%] -left-3 animate-float rounded-2xl border border-white/60 bg-white/80 p-3.5 pr-5 shadow-lift backdrop-blur-xl sm:-left-8">
+          <div data-depth="-40" className="absolute top-[18%] -left-3 animate-float rounded-2xl border border-white/60 bg-white/80 p-3.5 pr-5 shadow-lift backdrop-blur-xl sm:-left-8">
             <div className="flex items-center gap-3">
               <span className="flex size-10 items-center justify-center rounded-xl bg-gold-soft text-gold-deep">
                 <Clock3 className="size-5" />
@@ -130,7 +137,7 @@ export default function Hero({ serviceCount }: { serviceCount: number | null }) 
             </div>
           </div>
 
-          <div className="absolute right-3 bottom-8 animate-float-late rounded-2xl border border-white/60 bg-white/85 p-3.5 pr-5 shadow-lift backdrop-blur-xl sm:-right-6">
+          <div data-depth="30" className="absolute right-3 bottom-8 animate-float-late rounded-2xl border border-white/60 bg-white/85 p-3.5 pr-5 shadow-lift backdrop-blur-xl sm:-right-6">
             <div className="flex items-center gap-3">
               <span className="flex size-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
                 <ShieldCheck className="size-5" />
@@ -141,7 +148,7 @@ export default function Hero({ serviceCount }: { serviceCount: number | null }) 
               </div>
             </div>
           </div>
-        </div>
+        </Parallax>
       </div>
 
       {/* Search */}

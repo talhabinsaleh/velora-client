@@ -45,7 +45,7 @@ export default function HowItWorks() {
         </Reveal>
 
         <Reveal delay={120} className="relative">
-          <div className="group arch relative aspect-[4/5] overflow-hidden shadow-lift sm:aspect-[5/5.4]">
+          <div className="img-reveal group arch relative aspect-[4/5] overflow-hidden shadow-lift sm:aspect-[5/5.4]">
             <Image src={interior} alt="Velora's warm salon floor with styling stations" fill placeholder="blur" sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover transition duration-[1.4s] ease-out group-hover:scale-105" />
           </div>
           <div className="absolute -bottom-6 left-4 max-w-[17rem] rounded-2xl border border-line bg-white p-4 shadow-lift sm:-left-6">

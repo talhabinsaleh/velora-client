@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Manrope } from "next/font/google";
 import { Toaster } from "sonner";
+import Interactions from "@/components/fx/Interactions";
 import "./globals.css";
 
 const display = Fraunces({
@@ -41,6 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${display.variable} ${body.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
         {children}
+        <Interactions />
         <Toaster
           position="top-center"
           richColors

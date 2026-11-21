@@ -28,6 +28,7 @@ export default function CategoryAccordion({ summaries }: { summaries: CategorySu
             <Link
               key={cat.slug}
               href={`/services?category=${encodeURIComponent(cat.name)}`}
+              data-cursor="Explore"
               onMouseEnter={() => setActive(i)}
               onFocus={() => setActive(i)}
               aria-label={`${cat.name}: ${meta(byName.get(cat.name))}`}

@@ -2,29 +2,32 @@ import { ArrowUpRight, Clock3 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { formatDuration, formatPrice } from "@/lib/format";
+import Tilt from "@/components/fx/Tilt";
 import type { Service } from "@/lib/types";
 
 // Arch-topped card: the photo zooms, the card lifts and a round "View" badge rises on hover
 export default function ServiceCard({ service, priority = false }: { service: Service; priority?: boolean }) {
   const href = `/services/${service._id}`;
   return (
-    <article className="group relative flex h-full flex-col rounded-[2rem] border border-line/70 bg-white p-3 shadow-soft transition duration-500 ease-out hover:-translate-y-1.5 hover:border-gold/40 hover:shadow-[0_30px_60px_-30px_rgb(31_25_21/0.45)]">
+    <Tilt className="h-full">
+    <article
+      data-cursor="View"
+      className="group relative flex h-full flex-col rounded-[2rem] border border-line/70 bg-white p-3 shadow-soft hover:border-gold/40 hover:shadow-[0_34px_70px_-32px_rgb(31_25_21/0.5)]"
+    >
+      <span aria-hidden className="fx-glare" />
       <Link href={href} tabIndex={-1} aria-hidden className="arch relative block aspect-[4/4.4] overflow-hidden bg-sand">
+        <span className="fx-depth absolute -inset-3 block">
         <Image
           src={service.image}
           alt=""
           fill
           priority={priority}
           sizes="(min-width: 1280px) 25vw, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
-          className="object-cover transition duration-[1.2s] ease-out group-hover:scale-[1.08]"
+          className="object-cover"
         />
+        </span>
         <div className="absolute inset-0 bg-gradient-to-t from-ink/55 via-ink/0 to-ink/0 transition duration-500 group-hover:from-ink/65" />
 
-        {/* round badge that rises into view on hover */}
-        <span className="absolute top-1/2 left-1/2 flex size-24 -translate-x-1/2 -translate-y-[35%] scale-75 flex-col items-center justify-center rounded-full bg-cream/90 text-center text-[11px] font-bold tracking-[0.16em] text-ink uppercase opacity-0 shadow-lift backdrop-blur transition duration-500 ease-out group-hover:-translate-y-1/2 group-hover:scale-100 group-hover:opacity-100">
-          <ArrowUpRight className="mb-1 size-5 text-gold-deep" />
-          View
-        </span>
 
         <span className="absolute bottom-4 left-4 inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1.5 text-[11px] font-semibold text-white ring-1 ring-white/30 backdrop-blur-md">
           <Clock3 className="size-3.5" /> {formatDuration(service.duration)}
@@ -55,6 +58,7 @@ export default function ServiceCard({ service, priority = false }: { service: Se
         </div>
       </div>
     </article>
+    </Tilt>
   );
 }
 

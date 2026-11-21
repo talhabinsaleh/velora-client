@@ -118,7 +118,7 @@ export default function Navbar({ initialUser }: { initialUser: NavUser | null })
                 >
                   Sign In
                 </Link>
-                <Link href="/sign-up" className="btn btn-sm btn-dark">
+                <Link href="/sign-up" data-magnetic className="btn btn-sm btn-dark">
                   Sign Up <span className="btn-chip"><ArrowRight /></span>
                 </Link>
               </div>

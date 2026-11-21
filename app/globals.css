@@ -161,19 +161,6 @@ body {
     @apply bg-white text-ink shadow-[0_10px_24px_-14px_rgb(0_0_0/0.6)] hover:-translate-y-px hover:bg-cream;
   }
 
-  /* light sweep on the filled buttons */
-  .btn-dark::before,
-  .btn-gold::before,
-  .btn-light::before {
-    content: "";
-    @apply pointer-events-none absolute inset-y-0 -left-2/3 -z-10 w-1/2 -skew-x-12 bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 ease-out;
-  }
-  .btn-dark:hover::before,
-  .btn-gold:hover::before,
-  .btn-light:hover::before {
-    @apply translate-x-[420%];
-  }
-
   /* round arrow badge inside a button */
   .btn-chip {
     @apply -mr-3 ml-1 inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-gold text-white transition-all duration-300 ease-out;
@@ -315,5 +302,230 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   .reveal {
     opacity: 1;
     transform: none;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Interaction layer (components/fx)                                    */
+/* ------------------------------------------------------------------ */
+
+/* Liquid fill: a circle grows from the exact point the pointer entered the button */
+.btn::after {
+  content: "";
+  position: absolute;
+  left: var(--fx, 50%);
+  top: var(--fy, 50%);
+  z-index: -1;
+  width: 0;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background: var(--fill, transparent);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+.btn:hover::after {
+  width: 320%;
+}
+.btn-dark {
+  --fill: linear-gradient(135deg, #c9a06a, #9a6c38);
+}
+.btn-dark:hover {
+  color: #fff;
+}
+.btn-dark:hover .btn-chip {
+  background: var(--color-ink);
+  color: var(--color-gold-soft);
+}
+.btn-gold {
+  --fill: var(--color-ink);
+}
+.btn-outline,
+.btn-light {
+  --fill: var(--color-ink);
+}
+.btn-outline:hover,
+.btn-light:hover {
+  color: var(--color-cream);
+  border-color: var(--color-ink);
+}
+.btn-outline:hover .btn-chip,
+.btn-light:hover .btn-chip {
+  background: var(--color-gold);
+  color: #fff;
+}
+.btn-glass {
+  --fill: #fff;
+}
+.btn-glass:hover {
+  color: var(--color-ink);
+}
+.btn-glass:hover .btn-chip {
+  background: var(--color-ink);
+  color: #fff;
+}
+
+/* Magnetic elements spring back smoothly */
+[data-magnetic] {
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+/* Cursor ring */
+.fx-cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid rgb(181 138 84 / 0.75);
+  border-radius: 999px;
+  pointer-events: none;
+  transition:
+    width 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    margin 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.3s,
+    border-color 0.3s,
+    opacity 0.3s;
+}
+html:not(.has-cursor) .fx-cursor {
+  display: none;
+}
+.fx-cursor[data-state="hidden"] {
+  opacity: 0;
+}
+.fx-cursor[data-state="hover"] {
+  width: 54px;
+  height: 54px;
+  margin: -27px 0 0 -27px;
+  background: rgb(181 138 84 / 0.1);
+  border-color: rgb(181 138 84 / 0.4);
+}
+.fx-cursor[data-state="label"] {
+  width: 92px;
+  height: 92px;
+  margin: -46px 0 0 -46px;
+  background: rgb(31 25 21 / 0.88);
+  border-color: transparent;
+  backdrop-filter: blur(6px);
+}
+.fx-cursor-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-cream);
+  opacity: 0;
+  transform: scale(0.6);
+  transition:
+    opacity 0.25s,
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.fx-cursor[data-state="label"] .fx-cursor-label {
+  opacity: 1;
+  transform: none;
+}
+html.has-cursor [data-cursor],
+html.has-cursor [data-cursor] * {
+  cursor: none;
+}
+
+/* 3D tilt cards */
+.fx-tilt {
+  perspective: 1100px;
+}
+.fx-tilt > * {
+  transform: translateY(var(--lift, 0)) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transform-style: preserve-3d;
+  transition:
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.6s,
+    border-color 0.6s;
+}
+.fx-tilt:hover {
+  --lift: -6px;
+}
+.fx-glare {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  border-radius: inherit;
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 0%), rgb(255 255 255 / 0.45), transparent 42%);
+  mix-blend-mode: soft-light;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+.fx-tilt:hover .fx-glare {
+  opacity: 1;
+}
+.fx-depth {
+  transform: translate3d(var(--px, 0), var(--py, 0), 0) scale(1.06);
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.fx-tilt:hover .fx-depth {
+  transform: translate3d(var(--px, 0), var(--py, 0), 0) scale(1.12);
+}
+
+/* Parallax layers ease into place */
+[data-depth] {
+  transition: translate 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Headline lines rise from behind a mask */
+.line-mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
+}
+.line-mask > span {
+  display: inline-block;
+}
+.line-in > span {
+  animation: line-up 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.reveal .line-mask > span {
+  transform: translateY(105%);
+  transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1) 0.1s;
+}
+.reveal.is-visible .line-mask > span {
+  transform: none;
+}
+@keyframes line-up {
+  from {
+    transform: translateY(108%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* Large images open from a mask when they scroll into view */
+.reveal .img-reveal {
+  clip-path: inset(10% 12% 10% 12%);
+  transition: clip-path 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.is-visible .img-reveal {
+  clip-path: inset(0 0 0 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .line-in > span,
+  .reveal .line-mask > span {
+    animation: none;
+    transform: none;
+  }
+  .reveal .img-reveal {
+    clip-path: none;
+  }
+  .fx-tilt > * {
+    transform: none !important;
   }
 }
