@@ -1,26 +1,214 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ------------------------------------------------------------------ */
+/* Velora design tokens: warm espresso, champagne gold and soft cream  */
+/* ------------------------------------------------------------------ */
+@theme {
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display-face), ui-serif, Georgia, serif;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-ink: #1f1915;
+  --color-ink-2: #2d241f;
+  --color-ink-3: #4a3f38;
+  --color-muted: #776b62;
+  --color-cream: #fbf8f4;
+  --color-sand: #f4ede4;
+  --color-sand-2: #ece2d5;
+  --color-line: #e6dccf;
+  --color-gold: #b58a54;
+  --color-gold-deep: #8d6535;
+  --color-gold-soft: #ecdcc3;
+  --color-blush: #f3e4dc;
+  --color-rose: #b5645a;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --radius-xl2: 1.25rem;
+  --shadow-soft: 0 1px 2px rgb(31 25 21 / 0.04), 0 8px 24px -12px rgb(31 25 21 / 0.12);
+  --shadow-lift: 0 2px 4px rgb(31 25 21 / 0.04), 0 22px 44px -18px rgb(31 25 21 / 0.28);
+
+  --animate-fade-up: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fade-in: fade-in 0.4s ease both;
+  --animate-shimmer: shimmer 1.4s linear infinite;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes shimmer {
+    from {
+      background-position: -400px 0;
+    }
+    to {
+      background-position: 400px 0;
+    }
   }
 }
 
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-gold-soft);
+  color: var(--color-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Reusable building blocks                                            */
+/* ------------------------------------------------------------------ */
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.22em] text-gold-deep uppercase;
+  }
+  .eyebrow::before {
+    content: "";
+    @apply h-px w-6 bg-gold;
+  }
+
+  .h-display {
+    @apply font-display font-medium tracking-[-0.02em] text-ink;
+  }
+
+  /* Buttons */
+  .btn {
+    @apply inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full px-5 text-sm font-semibold whitespace-nowrap transition duration-200 select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold disabled:cursor-not-allowed disabled:opacity-55;
+  }
+  .btn-sm {
+    @apply h-9 px-4 text-[13px];
+  }
+  .btn-lg {
+    @apply h-13 px-7 text-[15px];
+  }
+  .btn-dark {
+    @apply bg-ink text-cream hover:bg-ink-2 active:scale-[0.98];
+  }
+  .btn-gold {
+    @apply bg-gold text-white shadow-[0_10px_24px_-12px_rgb(141_101_53/0.9)] hover:bg-gold-deep active:scale-[0.98];
+  }
+  .btn-outline {
+    @apply border border-line bg-white text-ink hover:border-ink/40 hover:bg-sand/60;
+  }
+  .btn-ghost {
+    @apply text-ink-3 hover:bg-sand hover:text-ink;
+  }
+  .btn-danger {
+    @apply bg-rose text-white hover:bg-[#9b5047];
+  }
+  .btn-glass {
+    @apply border border-white/25 bg-white/10 text-white backdrop-blur-md hover:bg-white/20;
+  }
+  .btn .arrow {
+    @apply transition-transform duration-200;
+  }
+  .btn:hover .arrow {
+    @apply translate-x-0.5;
+  }
+
+  /* Form controls */
+  .label {
+    @apply mb-1.5 block text-[13px] font-semibold text-ink-3;
+  }
+  .input {
+    @apply h-11 w-full rounded-xl border border-line bg-white px-3.5 text-[15px] text-ink transition outline-none placeholder:text-muted/70 focus:border-gold focus:ring-4 focus:ring-gold/15 disabled:bg-sand/50 aria-invalid:border-rose aria-invalid:ring-rose/10;
+  }
+  textarea.input {
+    @apply h-auto min-h-28 py-3 leading-relaxed;
+  }
+  select.input {
+    @apply cursor-pointer appearance-none bg-[url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2216%22 height=%2216%22 fill=%22none%22 stroke=%22%23776b62%22 stroke-width=%222%22 viewBox=%220 0 24 24%22><path d=%22m6 9 6 6 6-6%22/></svg>')] bg-[length:16px] bg-[right_12px_center] bg-no-repeat pr-9;
+  }
+  .field-error {
+    @apply mt-1.5 text-[13px] font-medium text-rose;
+  }
+
+  /* Surfaces */
+  .card {
+    @apply rounded-xl2 border border-line/80 bg-white shadow-soft;
+  }
+
+  .skeleton {
+    @apply animate-shimmer rounded-lg bg-[linear-gradient(90deg,#efe7dc_0px,#f8f3ec_120px,#efe7dc_240px)] bg-[length:800px_100%];
+  }
+
+  .chip {
+    @apply inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-full border border-line bg-white px-4 text-[13px] font-semibold whitespace-nowrap text-ink-3 transition hover:border-ink/30 hover:text-ink;
+  }
+  .chip[data-active="true"] {
+    @apply border-ink bg-ink text-cream;
+  }
+
+  /* Tables in the dashboard */
+  .table-wrap {
+    @apply overflow-x-auto rounded-xl2 border border-line/80 bg-white shadow-soft;
+  }
+  .table {
+    @apply w-full min-w-[720px] text-left text-sm;
+  }
+  .table thead th {
+    @apply border-b border-line bg-sand/50 px-4 py-3 text-[11px] font-semibold tracking-[0.12em] whitespace-nowrap text-muted uppercase;
+  }
+  .table tbody td {
+    @apply border-b border-line/70 px-4 py-3.5 align-middle;
+  }
+  .table tbody tr:last-child td {
+    @apply border-b-0;
+  }
+  .table tbody tr {
+    @apply transition-colors hover:bg-cream;
+  }
+}
+
+/* Thin, warm scrollbars for horizontal lists */
+.scroll-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-sand-2) transparent;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Date input calendar icon in brand color */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.6;
 }
