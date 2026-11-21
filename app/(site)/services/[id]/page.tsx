@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import ServiceCard from "@/components/ServiceCard";
 import BookingPanel from "@/components/services/BookingPanel";
+import ReviewList from "@/components/services/ReviewList";
+import { Stars } from "@/components/Stars";
 import { formatDuration, formatPrice } from "@/lib/format";
 import { getServiceDetails } from "@/lib/server-api";
 import { requireUser, roleOf } from "@/lib/session";
@@ -55,6 +57,19 @@ export default async function ServiceDetailsPage({ params }: Props) {
             </div>
 
             <h1 className="h-display mt-8 text-4xl leading-tight sm:text-5xl">{service.serviceName}</h1>
+            <a href="#reviews" className="mt-3 inline-flex items-center gap-2 text-sm text-ink-3 hover:text-ink">
+              {service.reviewCount ? (
+                <>
+                  <Stars value={service.rating ?? 0} />
+                  <strong className="text-ink">{service.rating?.toFixed(1)}</strong>
+                  <span className="text-muted">
+                    · {service.reviewCount} review{service.reviewCount === 1 ? "" : "s"}
+                  </span>
+                </>
+              ) : (
+                <span className="rounded-full bg-gold-soft/60 px-2.5 py-0.5 text-xs font-bold tracking-wide text-gold-deep uppercase">New · No reviews yet</span>
+              )}
+            </a>
 
             <dl className="mt-6 grid gap-3 sm:grid-cols-3">
               {facts.map(({ Icon, label, value }) => (
@@ -71,6 +86,8 @@ export default async function ServiceDetailsPage({ params }: Props) {
               <h2 className="font-display text-2xl text-ink">About this service</h2>
               <p className="mt-3 text-base leading-[1.8] whitespace-pre-line text-ink-3">{service.description}</p>
             </section>
+
+            <ReviewList reviews={service.reviews} rating={service.rating ?? 0} count={service.reviewCount ?? 0} />
 
             <section className="mt-10 rounded-[1.5rem] bg-sand/70 p-6">
               <h2 className="font-display text-xl text-ink">Good to know</h2>

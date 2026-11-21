@@ -1,4 +1,4 @@
-import { ArrowUpRight, Clock3 } from "lucide-react";
+import { ArrowUpRight, Clock3, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { formatDuration, formatPrice } from "@/lib/format";
@@ -30,6 +30,16 @@ export default function ServiceCard({ service, priority = false }: { service: Se
 
         <span className="absolute bottom-4 left-4 inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1.5 text-[11px] font-semibold text-white ring-1 ring-white/30 backdrop-blur-md">
           <Clock3 className="size-3.5" /> {formatDuration(service.duration)}
+        </span>
+        <span className="absolute right-4 bottom-4 inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-1.5 text-[11px] font-bold text-ink shadow-soft">
+          {service.reviewCount ? (
+            <>
+              <Star className="size-3.5 fill-amber-400 text-amber-400" /> {service.rating?.toFixed(1)}
+              <span className="font-medium text-muted">({service.reviewCount})</span>
+            </>
+          ) : (
+            <span className="tracking-wide text-gold-deep uppercase">New</span>
+          )}
         </span>
       </Link>
 

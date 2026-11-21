@@ -14,10 +14,37 @@ export interface Service {
   status: ServiceStatus;
   createdAt: string;
   updatedAt?: string;
+  rating?: number;
+  reviewCount?: number;
+}
+
+export interface PublicReview {
+  _id: string;
+  rating: number;
+  comment: string;
+  createdAt: string | null;
+  customer: { name: string; image: string | null };
+  service: { _id: string; serviceName: string; category: string } | null;
 }
 
 export interface ServiceDetails extends Service {
   related: Service[];
+  reviews: PublicReview[];
+}
+
+export interface Review {
+  rating: number;
+  comment: string;
+  hidden?: boolean;
+  createdAt: string;
+}
+
+export interface CancelRequest {
+  reason: string;
+  status: "open" | "approved" | "declined";
+  requestedAt: string;
+  resolvedAt?: string;
+  adminNote?: string;
 }
 
 export interface Paged<T> {
@@ -57,6 +84,8 @@ export interface Appointment {
   status: AppointmentStatus;
   createdAt: string;
   updatedAt?: string;
+  review?: Review;
+  cancelRequest?: CancelRequest;
 }
 
 export interface Transaction {
@@ -80,6 +109,9 @@ export interface CustomerStats {
   confirmed: number;
   cancelled: number;
   awaitingPayment: number;
+  awaitingReview: number;
+  reviewsGiven: number;
+  openRequests: number;
   totalSpent: number;
   upcoming: Appointment[];
 }
@@ -93,8 +125,22 @@ export interface AdminStats {
   cancelled: number;
   successfulPayments: number;
   revenue: number;
+  range: {
+    days: number;
+    monthly: boolean;
+    revenue: number;
+    revenueChange: number;
+    bookings: number;
+    bookingsChange: number;
+    payments: number;
+    newCustomers: number;
+  };
+  series: { key: string; revenue: number; payments: number; bookings: number }[];
+  topServices: { _id: string; name: string; image: string; category: string; bookings: number; revenue: number }[];
   byCategory: { category: string; count: number }[];
-  requestsByDay: { date: string; count: number }[];
+  today: Appointment[];
+  openCancelRequests: number;
+  rating: { average: number; count: number };
   recent: Appointment[];
 }
 
