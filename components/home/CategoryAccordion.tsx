@@ -4,7 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { CATEGORIES } from "@/lib/constants";
+import { CATEGORIES, categoryHref } from "@/lib/constants";
 import { formatPrice } from "@/lib/format";
 import type { CategorySummary } from "@/lib/types";
 
@@ -27,8 +27,7 @@ export default function CategoryAccordion({ summaries }: { summaries: CategorySu
           return (
             <Link
               key={cat.slug}
-              href={`/services?category=${encodeURIComponent(cat.name)}`}
-              data-cursor="Explore"
+              href={categoryHref(cat.name)}
               onMouseEnter={() => setActive(i)}
               onFocus={() => setActive(i)}
               aria-label={`${cat.name}: ${meta(byName.get(cat.name))}`}
@@ -72,7 +71,7 @@ export default function CategoryAccordion({ summaries }: { summaries: CategorySu
         {CATEGORIES.map((cat, i) => (
           <Link
             key={cat.slug}
-            href={`/services?category=${encodeURIComponent(cat.name)}`}
+            href={categoryHref(cat.name)}
             className="group arch relative isolate flex aspect-[3/4] w-[72%] shrink-0 snap-start flex-col justify-end overflow-hidden p-6 text-white sm:w-[40%]"
           >
             <Image src={cat.image} alt="" fill sizes="(min-width: 640px) 40vw, 72vw" className="-z-20 object-cover transition duration-700 group-hover:scale-105" />

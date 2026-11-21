@@ -371,71 +371,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   will-change: transform;
 }
 
-/* Cursor ring */
-.fx-cursor {
-  position: fixed;
-  left: 0;
-  top: 0;
-  z-index: 100;
-  display: flex;
-  width: 34px;
-  height: 34px;
-  margin: -17px 0 0 -17px;
-  align-items: center;
-  justify-content: center;
-  border: 1.5px solid rgb(200 115 92 / 0.75);
-  border-radius: 999px;
-  pointer-events: none;
-  transition:
-    width 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-    height 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-    margin 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-    background-color 0.3s,
-    border-color 0.3s,
-    opacity 0.3s;
-}
-html:not(.has-cursor) .fx-cursor {
-  display: none;
-}
-.fx-cursor[data-state="hidden"] {
-  opacity: 0;
-}
-.fx-cursor[data-state="hover"] {
-  width: 54px;
-  height: 54px;
-  margin: -27px 0 0 -27px;
-  background: rgb(200 115 92 / 0.1);
-  border-color: rgb(200 115 92 / 0.4);
-}
-.fx-cursor[data-state="label"] {
-  width: 92px;
-  height: 92px;
-  margin: -46px 0 0 -46px;
-  background: rgb(19 35 30 / 0.88);
-  border-color: transparent;
-  backdrop-filter: blur(6px);
-}
-.fx-cursor-label {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--color-cream);
-  opacity: 0;
-  transform: scale(0.6);
-  transition:
-    opacity 0.25s,
-    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.fx-cursor[data-state="label"] .fx-cursor-label {
-  opacity: 1;
-  transform: none;
-}
-html.has-cursor [data-cursor],
-html.has-cursor [data-cursor] * {
-  cursor: none;
-}
-
 /* 3D tilt cards */
 .fx-tilt {
   perspective: 1100px;
@@ -536,5 +471,14 @@ html.has-cursor [data-cursor] * {
   }
   to {
     transform: scaleX(1);
+  }
+}
+
+@keyframes kenburns {
+  from {
+    transform: scale(1.12);
+  }
+  to {
+    transform: scale(1);
   }
 }

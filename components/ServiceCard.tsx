@@ -11,7 +11,6 @@ export default function ServiceCard({ service, priority = false }: { service: Se
   return (
     <Tilt className="h-full">
     <article
-      data-cursor="View"
       className="group relative flex h-full flex-col rounded-[2rem] border border-line/70 bg-white p-3 shadow-soft hover:border-gold/40 hover:shadow-[0_34px_70px_-32px_rgb(19_35_30/0.5)]"
     >
       <span aria-hidden className="fx-glare" />
