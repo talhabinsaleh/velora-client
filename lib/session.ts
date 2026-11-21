@@ -2,12 +2,13 @@ import "server-only";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { cache } from "react";
-import { auth } from "./auth";
+import { withAuth } from "./auth";
 import type { Role } from "./types";
 
 export const getSession = cache(async () => {
   try {
-    return await auth.api.getSession({ headers: await headers() });
+    const h = await headers();
+    return await withAuth((auth) => auth.api.getSession({ headers: h }));
   } catch {
     return null;
   }

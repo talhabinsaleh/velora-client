@@ -3,18 +3,20 @@ import { betterAuth } from "better-auth";
 import { APIError, createAuthMiddleware } from "better-auth/api";
 import { nextCookies } from "better-auth/next-js";
 import { ObjectId } from "mongodb";
-import { client, db } from "./mongodb";
+import { getMongo, isConnectionError, markMongoClosed } from "./mongodb";
 import { passwordProblem } from "./validation";
 
 export const BLOCKED_MESSAGE = "Your account has been blocked. Please contact the salon for help.";
 
 async function isBlocked(userId: string) {
   if (!ObjectId.isValid(userId)) return false;
-  const user = await db.collection("users").findOne({ _id: new ObjectId(userId) }, { projection: { isBlocked: 1 } });
+  const user = await getMongo().db.collection("users").findOne({ _id: new ObjectId(userId) }, { projection: { isBlocked: 1 } });
   return user?.isBlocked === true;
 }
 
-export const auth = betterAuth({
+function createAuth() {
+  const { client, db } = getMongo();
+  return betterAuth({
   baseURL: process.env.BETTER_AUTH_URL,
   secret: process.env.BETTER_AUTH_SECRET,
   database: mongodbAdapter(db, { client }),
@@ -79,7 +81,32 @@ export const auth = betterAuth({
   },
 
   plugins: [nextCookies()],
-});
+  });
+}
 
-export type Session = typeof auth.$Infer.Session;
+export type Auth = ReturnType<typeof createAuth>;
+const holder = globalThis as typeof globalThis & { _veloraAuth?: { auth: Auth; client: unknown } };
+
+// Better Auth is bound to one Mongo client. If that client had to be replaced (see mongodb.ts),
+// build a fresh Better Auth instance on top of the new one.
+export function getAuth(): Auth {
+  const { client } = getMongo();
+  if (!holder._veloraAuth || holder._veloraAuth.client !== client) {
+    holder._veloraAuth = { auth: createAuth(), client };
+  }
+  return holder._veloraAuth.auth;
+}
+
+// Runs a database-backed auth call, and once more on a fresh connection if the old one was dead
+export async function withAuth<T>(fn: (auth: Auth) => Promise<T>): Promise<T> {
+  try {
+    return await fn(getAuth());
+  } catch (err) {
+    if (!isConnectionError(err)) throw err;
+    markMongoClosed();
+    return fn(getAuth());
+  }
+}
+
+export type Session = Auth["$Infer"]["Session"];
 export type SessionUser = Session["user"];

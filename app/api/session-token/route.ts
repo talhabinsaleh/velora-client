@@ -1,7 +1,7 @@
 import { SignJWT } from "jose";
 import { cookies, headers } from "next/headers";
 import { NextResponse } from "next/server";
-import { auth, BLOCKED_MESSAGE } from "@/lib/auth";
+import { BLOCKED_MESSAGE, withAuth } from "@/lib/auth";
 
 const COOKIE = "velora_token";
 const MAX_AGE = 60 * 60 * 24 * 7;
@@ -10,7 +10,8 @@ const MAX_AGE = 60 * 60 * 24 * 7;
 // The token lives in an HTTP-only cookie, so page scripts can never read it.
 export async function POST() {
   const store = await cookies();
-  const session = await auth.api.getSession({ headers: await headers() });
+  const h = await headers();
+  const session = await withAuth((auth) => auth.api.getSession({ headers: h }));
   if (!session) {
     store.delete(COOKIE);
     return NextResponse.json({ message: "Unauthorized: please sign in first." }, { status: 401 });
