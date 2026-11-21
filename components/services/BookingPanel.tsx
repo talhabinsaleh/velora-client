@@ -114,7 +114,7 @@ export default function BookingPanel({ service }: { service: Service }) {
   }
 
   return (
-    <form onSubmit={submit} className="card overflow-hidden" noValidate>
+    <form onSubmit={submit} className="card min-w-0 overflow-hidden" noValidate>
       <div className="border-b border-line bg-sand/50 p-5 sm:p-6">
         <p className="text-[11px] font-bold tracking-[0.16em] text-muted uppercase">Request an appointment</p>
         <div className="mt-2 flex items-end justify-between gap-3">

@@ -46,7 +46,7 @@ export default async function ServiceDetailsPage({ params }: Props) {
           </Link>
         </nav>
 
-        <div className="mt-6 grid gap-10 lg:grid-cols-[1fr_420px] lg:gap-12">
+        <div className="mt-6 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_420px] lg:gap-12">
           <div className="min-w-0">
             <div className="relative aspect-[16/11] overflow-hidden rounded-[2rem] bg-sand shadow-soft">
               <Image src={service.image} alt={service.serviceName} fill priority sizes="(min-width: 1024px) 60vw, 100vw" className="object-cover" />
@@ -90,7 +90,7 @@ export default async function ServiceDetailsPage({ params }: Props) {
             </section>
           </div>
 
-          <aside className="lg:sticky lg:top-24 lg:self-start">
+          <aside className="min-w-0 lg:sticky lg:top-24 lg:self-start">
             {role === "admin" ? (
               <div className="card p-6">
                 <p className="eyebrow">Admin view</p>
@@ -118,7 +118,7 @@ export default async function ServiceDetailsPage({ params }: Props) {
           <section className="mt-20">
             <div className="flex items-end justify-between gap-4">
               <h2 className="h-display text-3xl">More in {service.category}</h2>
-              <Link href={`/services?category=${encodeURIComponent(service.category)}`} className="text-sm font-semibold text-gold-deep hover:underline">
+              <Link href={`/services?category=${encodeURIComponent(service.category)}`} className="shrink-0 text-sm font-semibold whitespace-nowrap text-gold-deep hover:underline">
                 See all
               </Link>
             </div>
