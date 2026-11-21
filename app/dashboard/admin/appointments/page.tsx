@@ -6,6 +6,8 @@ import { Suspense, useEffect, useState } from "react";
 import { toast } from "sonner";
 import Avatar from "@/components/Avatar";
 import ConfirmDialog from "@/components/ConfirmDialog";
+import { RequestBadge } from "@/components/dashboard/CustomerModals";
+import Modal from "@/components/Modal";
 import AppointmentDetails, { ServiceCell } from "@/components/dashboard/AppointmentDetails";
 import { DashHeader, FilterTabs, TableSkeleton } from "@/components/dashboard/ui";
 import Pagination from "@/components/Pagination";
@@ -16,7 +18,7 @@ import { formatAppointmentDate, formatDate, formatPrice } from "@/lib/format";
 import { useApi } from "@/lib/use-api";
 import type { Appointment, Paged, UserSummary } from "@/lib/types";
 
-type Status = "all" | "pending" | "confirmed" | "cancelled";
+type Status = "all" | "pending" | "confirmed" | "cancelled" | "requests";
 type Payment = "all" | "paid" | "unpaid";
 type Action = { kind: "confirm" | "cancel"; appointment: Appointment };
 
@@ -28,14 +30,17 @@ function ManageAppointments() {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
-  const status = (["pending", "confirmed", "cancelled"].includes(params.get("status") ?? "") ? params.get("status") : "all") as Status;
+  const status = (
+    params.get("request") === "open" ? "requests" : ["pending", "confirmed", "cancelled"].includes(params.get("status") ?? "") ? params.get("status") : "all"
+  ) as Status;
   const payment = (["paid", "unpaid"].includes(params.get("payment") ?? "") ? params.get("payment") : "all") as Payment;
   const page = Math.max(1, Number(params.get("page")) || 1);
   const search = params.get("search") ?? "";
   const [draft, setDraft] = useState(search);
 
   const query = new URLSearchParams({ page: String(page), limit: "10" });
-  if (status !== "all") query.set("status", status);
+  if (status === "requests") query.set("request", "open");
+  else if (status !== "all") query.set("status", status);
   if (payment !== "all") query.set("payment", payment);
   if (search) query.set("search", search);
   const { data, error, loading, reload } = useApi<Paged<Appointment>>(`/api/admin/appointments?${query}`);
@@ -43,6 +48,25 @@ function ManageAppointments() {
   const [viewing, setViewing] = useState<Appointment | null>(null);
   const [action, setAction] = useState<Action | null>(null);
   const [busy, setBusy] = useState(false);
+  const [declining, setDeclining] = useState<Appointment | null>(null);
+  const [note, setNote] = useState("");
+
+  async function decline() {
+    if (!declining) return;
+    setBusy(true);
+    try {
+      const res = await api<{ message: string }>(`/api/admin/appointments/${declining._id}/cancel-request/decline`, { method: "PATCH", body: { note: note.trim() } });
+      toast.success(res.message);
+      setDeclining(null);
+      setViewing(null);
+      setNote("");
+      reload();
+    } catch (err) {
+      toast.error(errorMessage(err));
+    } finally {
+      setBusy(false);
+    }
+  }
 
   function setParam(changes: Record<string, string | null>) {
     const next = new URLSearchParams(params.toString());
@@ -107,12 +131,13 @@ function ManageAppointments() {
       <div className="mb-5 flex flex-col gap-3 xl:flex-row xl:items-center">
         <FilterTabs<Status>
           value={status}
-          onChange={(v) => setParam({ status: v })}
+          onChange={(v) => (v === "requests" ? setParam({ status: null, request: "open" }) : setParam({ status: v, request: null }))}
           options={[
             { value: "all", label: "All" },
             { value: "pending", label: "Pending" },
             { value: "confirmed", label: "Confirmed" },
             { value: "cancelled", label: "Cancelled" },
+            { value: "requests", label: "Cancel requests" },
           ]}
         />
         <select value={payment} onChange={(e) => setParam({ payment: e.target.value })} aria-label="Filter by payment" className="input xl:w-44">
@@ -179,6 +204,7 @@ function ManageAppointments() {
                         <div className="flex flex-col items-start gap-1">
                           <StatusBadge status={a.status} />
                           <StatusBadge status={a.paymentStatus} />
+                          <RequestBadge appointment={a} />
                         </div>
                       </td>
                       <td className="text-xs whitespace-nowrap text-muted">{formatDate(a.createdAt)}</td>
@@ -202,9 +228,14 @@ function ManageAppointments() {
         footer={
           viewing && (
             <>
+              {viewing.cancelRequest?.status === "open" && (
+                <button type="button" onClick={() => setDeclining(viewing)} className="btn btn-outline">
+                  Decline request
+                </button>
+              )}
               {canCancel(viewing) && (
                 <button type="button" onClick={() => setAction({ kind: "cancel", appointment: viewing })} className="btn btn-outline text-rose">
-                  Cancel appointment
+                  {viewing.cancelRequest?.status === "open" ? "Approve & cancel" : "Cancel appointment"}
                 </button>
               )}
               {viewing.status === "pending" && (
@@ -219,6 +250,30 @@ function ManageAppointments() {
           )
         }
       />
+
+      <Modal
+        open={!!declining}
+        onClose={() => setDeclining(null)}
+        locked={busy}
+        title="Decline cancellation request?"
+        description="The appointment stays confirmed. Your reply is shown to the customer."
+        footer={
+          <>
+            <button type="button" className="btn btn-outline" onClick={() => setDeclining(null)} disabled={busy}>
+              Go back
+            </button>
+            <button type="button" className="btn btn-dark" onClick={decline} disabled={busy}>
+              Decline request
+            </button>
+          </>
+        }
+      >
+        {declining?.cancelRequest && <p className="rounded-2xl bg-sand/70 p-4 text-sm text-ink-3">“{declining.cancelRequest.reason}”</p>}
+        <label htmlFor="decline-note" className="label mt-4">
+          Reply to the customer <span className="font-normal text-muted">(optional)</span>
+        </label>
+        <textarea id="decline-note" rows={3} maxLength={300} value={note} onChange={(e) => setNote(e.target.value)} className="input" placeholder="e.g. We can move you to another day instead, please call us." />
+      </Modal>
 
       <ConfirmDialog
         open={!!action}
