@@ -1,5 +1,5 @@
 import "server-only";
-import type { CategorySummary, Service, ServiceDetails } from "./types";
+import type { CategorySummary, PublicReview, Service, ServiceDetails } from "./types";
 
 const API_URL = (process.env.API_URL || "http://localhost:5000").replace(/\/$/, "");
 
@@ -24,4 +24,8 @@ export async function getCategorySummaries() {
 
 export async function getServiceDetails(id: string) {
   return get<ServiceDetails>(`/services/${encodeURIComponent(id)}`);
+}
+
+export async function getFeaturedReviews() {
+  return get<{ reviews: PublicReview[]; average: number; count: number }>("/services/reviews/featured");
 }

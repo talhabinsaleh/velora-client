@@ -4,6 +4,7 @@ import FeaturedServices, { FeaturedServicesSkeleton } from "@/components/home/Fe
 import HashScroll from "@/components/home/HashScroll";
 import Hero from "@/components/home/Hero";
 import HowItWorks from "@/components/home/HowItWorks";
+import Testimonials from "@/components/home/Testimonials";
 import { getCategorySummaries, getFeaturedServices } from "@/lib/server-api";
 import VisitUs, { CallToAction } from "@/components/home/VisitUs";
 
@@ -24,6 +25,9 @@ export default async function HomePage() {
         <Categories />
       </Suspense>
       <HowItWorks />
+      <Suspense fallback={null}>
+        <Testimonials />
+      </Suspense>
       <VisitUs />
       <CallToAction />
     </>
