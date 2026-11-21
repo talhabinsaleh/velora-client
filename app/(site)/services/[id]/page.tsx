@@ -1,3 +1,4 @@
+import { categoryHref } from "@/lib/constants";
 import { ArrowLeft, BadgeCheck, CalendarX2, Clock3, CreditCard, Pencil, Sparkles, Tag, Undo2 } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -41,7 +42,7 @@ export default async function ServiceDetailsPage({ params }: Props) {
             <ArrowLeft className="size-4" /> All services
           </Link>
           <span>/</span>
-          <Link href={`/services?category=${encodeURIComponent(service.category)}`} className="hover:text-ink">
+          <Link href={categoryHref(service.category)} className="hover:text-ink">
             {service.category}
           </Link>
         </nav>
@@ -118,7 +119,7 @@ export default async function ServiceDetailsPage({ params }: Props) {
           <section className="mt-20">
             <div className="flex items-end justify-between gap-4">
               <h2 className="h-display text-3xl">More in {service.category}</h2>
-              <Link href={`/services?category=${encodeURIComponent(service.category)}`} className="shrink-0 text-sm font-semibold whitespace-nowrap text-gold-deep hover:underline">
+              <Link href={categoryHref(service.category)} className="shrink-0 text-sm font-semibold whitespace-nowrap text-gold-deep hover:underline">
                 See all
               </Link>
             </div>

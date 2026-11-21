@@ -3,7 +3,7 @@
 import { Search, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
-import { CATEGORY_NAMES } from "@/lib/constants";
+import { CATEGORIES } from "@/lib/constants";
 
 // The search card that overlaps the bottom of the hero
 export default function HeroSearch() {
@@ -42,9 +42,9 @@ export default function HeroSearch() {
         <span className="mb-1.5 ml-1 block text-[11px] font-bold tracking-[0.16em] text-muted uppercase">Category</span>
         <select value={category} onChange={(e) => setCategory(e.target.value)} className="input h-12 bg-cream" aria-label="Category">
           <option value="all">All categories</option>
-          {CATEGORY_NAMES.map((c) => (
-            <option key={c} value={c}>
-              {c}
+          {CATEGORIES.map((c) => (
+            <option key={c.slug} value={c.slug}>
+              {c.name}
             </option>
           ))}
         </select>

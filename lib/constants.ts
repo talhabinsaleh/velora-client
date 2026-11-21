@@ -78,6 +78,22 @@ export const CATEGORIES: CategoryInfo[] = [
 
 export const CATEGORY_NAMES = CATEGORIES.map((c) => c.name);
 
+// Clean, readable category links: /services?category=haircut-styling
+export function categoryHref(name: string) {
+  const slug = CATEGORIES.find((c) => c.name === name)?.slug;
+  return slug ? `/services?category=${slug}` : "/services";
+}
+
+// Accepts a slug (or, for older links, the full name) and returns the category name
+export function categoryFromParam(value: string | null | undefined) {
+  if (!value) return null;
+  return CATEGORIES.find((c) => c.slug === value || c.name === value)?.name ?? null;
+}
+
+export function categorySlug(name: string) {
+  return CATEGORIES.find((c) => c.name === name)?.slug ?? "";
+}
+
 export const SORT_OPTIONS = [
   { value: "newest", label: "Newest first" },
   { value: "price_asc", label: "Price: low to high" },
@@ -99,3 +115,37 @@ export const TIME_SLOTS = [
 ];
 
 export const BOOKING_WINDOW_DAYS = 60;
+
+export const PROMISES = [
+  { title: "Certified stylists", text: "Every artist has at least five years of salon experience and trains with us every season." },
+  { title: "Honest pricing", text: "The price you see is the price you pay. No surprise add-ons at the chair." },
+  { title: "Hygiene first", text: "Tools are sterilised after every guest and towels are always single use." },
+  { title: "Gentle products", text: "Salon-grade, cruelty-free brands chosen for every hair and skin type." },
+];
+
+export const FAQS = [
+  {
+    q: "How do I book an appointment?",
+    a: "Open any service, choose a date and an open time slot and send your request. You'll see it in your dashboard as Pending until the salon confirms it.",
+  },
+  {
+    q: "When do I pay?",
+    a: "Only after we confirm your appointment. A Pay Now button then appears in My Appointments and takes you to secure Stripe checkout.",
+  },
+  {
+    q: "Can I cancel or change my request?",
+    a: "Yes. You can cancel any request that is still pending from your dashboard. Once it's confirmed, please call us and we'll help.",
+  },
+  {
+    q: "Which payment methods do you accept online?",
+    a: "All major debit and credit cards through Stripe. Your card details never touch our servers.",
+  },
+  {
+    q: "How early should I arrive?",
+    a: "Around ten minutes before your slot, so we can offer you a drink and talk through what you'd like.",
+  },
+  {
+    q: "Do you take walk-ins?",
+    a: "When a chair is free, yes, but booking online is the only way to guarantee your time.",
+  },
+];

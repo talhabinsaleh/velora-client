@@ -7,7 +7,7 @@ import Pagination from "@/components/Pagination";
 import ServiceCard, { ServiceGridSkeleton } from "@/components/ServiceCard";
 import { EmptyState, ErrorState } from "@/components/States";
 import { api, errorMessage } from "@/lib/api";
-import { CATEGORY_NAMES, SORT_OPTIONS } from "@/lib/constants";
+import { CATEGORIES, categoryFromParam, SORT_OPTIONS } from "@/lib/constants";
 import type { Paged, Service } from "@/lib/types";
 
 const PAGE_SIZE = 9;
@@ -18,7 +18,8 @@ export default function ServiceBrowser() {
   const params = useSearchParams();
 
   const search = params.get("search") ?? "";
-  const category = CATEGORY_NAMES.includes(params.get("category") ?? "") ? (params.get("category") as string) : "all";
+  // the address uses a slug (haircut-styling), the API uses the category name
+  const category = categoryFromParam(params.get("category")) ?? "all";
   const sort = SORT_OPTIONS.some((o) => o.value === params.get("sort")) ? (params.get("sort") as string) : "newest";
   const page = Math.max(1, Number(params.get("page")) || 1);
 
@@ -120,17 +121,17 @@ export default function ServiceBrowser() {
         </div>
 
         <div className="no-scrollbar -mx-1 mt-3 flex gap-2 overflow-x-auto px-1 pb-0.5" role="tablist" aria-label="Filter by category">
-          {["all", ...CATEGORY_NAMES].map((c) => (
+          {[{ name: "all", slug: "all" }, ...CATEGORIES].map((c) => (
             <button
-              key={c}
+              key={c.slug}
               type="button"
               role="tab"
-              aria-selected={category === c}
-              data-active={category === c}
-              onClick={() => update({ category: c })}
+              aria-selected={category === c.name}
+              data-active={category === c.name}
+              onClick={() => update({ category: c.slug })}
               className="chip"
             >
-              {c === "all" ? "All services" : c}
+              {c.name === "all" ? "All services" : c.name}
             </button>
           ))}
         </div>
