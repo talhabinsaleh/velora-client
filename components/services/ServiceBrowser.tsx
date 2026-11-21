@@ -80,7 +80,7 @@ export default function ServiceBrowser() {
   return (
     <div ref={topRef} className="scroll-mt-24">
       {/* Toolbar */}
-      <div className="sticky top-16 z-30 -mx-4 border-b border-line/70 bg-cream/90 px-4 py-4 backdrop-blur-xl sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+      <div className="sticky top-[4.6rem] z-30 -mx-4 border-b border-line/70 bg-cream/90 px-4 py-4 backdrop-blur-xl sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
           <div className="relative flex-1">
             <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted" />

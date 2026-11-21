@@ -106,39 +106,83 @@ body {
     @apply font-display font-medium tracking-[-0.02em] text-ink;
   }
 
-  /* Buttons */
+  /* Buttons: soft pills with an inner highlight, a light sweep on hover and an optional
+     round arrow badge (.btn-chip) that turns towards the top right */
   .btn {
-    @apply inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full px-5 text-sm font-semibold whitespace-nowrap transition duration-200 select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold disabled:cursor-not-allowed disabled:opacity-55;
+    @apply relative isolate inline-flex h-11 cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-full px-5 text-sm font-semibold tracking-[-0.005em] whitespace-nowrap transition-all duration-300 ease-out select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-55;
   }
   .btn-sm {
     @apply h-9 px-4 text-[13px];
   }
   .btn-lg {
-    @apply h-13 px-7 text-[15px];
+    @apply h-[3.25rem] px-7 text-[15px];
   }
   .btn-dark {
-    @apply bg-ink text-cream hover:bg-ink-2 active:scale-[0.98];
+    @apply bg-[linear-gradient(180deg,#3a2f29_0%,#1f1915_100%)] text-cream shadow-[inset_0_1px_0_rgb(255_255_255/0.14),0_12px_26px_-14px_rgb(31_25_21/0.85)] hover:-translate-y-px hover:shadow-[inset_0_1px_0_rgb(255_255_255/0.18),0_18px_32px_-14px_rgb(31_25_21/0.9)];
   }
   .btn-gold {
-    @apply bg-gold text-white shadow-[0_10px_24px_-12px_rgb(141_101_53/0.9)] hover:bg-gold-deep active:scale-[0.98];
+    @apply bg-[linear-gradient(180deg,#c9a06a_0%,#a87a43_100%)] text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.3),0_12px_26px_-12px_rgb(141_101_53/0.95)] hover:-translate-y-px hover:shadow-[inset_0_1px_0_rgb(255_255_255/0.35),0_18px_34px_-12px_rgb(141_101_53/1)];
   }
   .btn-outline {
-    @apply border border-line bg-white text-ink hover:border-ink/40 hover:bg-sand/60;
+    @apply border border-line bg-white text-ink shadow-[0_1px_2px_rgb(31_25_21/0.05)] hover:-translate-y-px hover:border-ink/35 hover:shadow-soft;
   }
   .btn-ghost {
     @apply text-ink-3 hover:bg-sand hover:text-ink;
   }
   .btn-danger {
-    @apply bg-rose text-white hover:bg-[#9b5047];
+    @apply bg-[linear-gradient(180deg,#c47065_0%,#a5554b_100%)] text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.22)] hover:-translate-y-px;
   }
   .btn-glass {
-    @apply border border-white/25 bg-white/10 text-white backdrop-blur-md hover:bg-white/20;
+    @apply border border-white/25 bg-white/10 text-white backdrop-blur-md hover:border-white/45 hover:bg-white/20;
   }
-  .btn .arrow {
-    @apply transition-transform duration-200;
+  .btn-light {
+    @apply bg-white text-ink shadow-[0_10px_24px_-14px_rgb(0_0_0/0.6)] hover:-translate-y-px hover:bg-cream;
   }
-  .btn:hover .arrow {
-    @apply translate-x-0.5;
+
+  /* light sweep on the filled buttons */
+  .btn-dark::before,
+  .btn-gold::before,
+  .btn-light::before {
+    content: "";
+    @apply pointer-events-none absolute inset-y-0 -left-2/3 -z-10 w-1/2 -skew-x-12 bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 ease-out;
+  }
+  .btn-dark:hover::before,
+  .btn-gold:hover::before,
+  .btn-light:hover::before {
+    @apply translate-x-[420%];
+  }
+
+  /* round arrow badge inside a button */
+  .btn-chip {
+    @apply -mr-3 ml-1 inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-gold text-white transition-all duration-300 ease-out;
+  }
+  .btn-chip svg {
+    @apply size-4 transition-transform duration-300 ease-out;
+  }
+  .btn:hover .btn-chip {
+    @apply scale-105;
+  }
+  .btn:hover .btn-chip svg {
+    @apply -rotate-45;
+  }
+  .btn-sm .btn-chip {
+    @apply -mr-2.5 size-6;
+  }
+  .btn-sm .btn-chip svg {
+    @apply size-3.5;
+  }
+  .btn-lg .btn-chip {
+    @apply -mr-4 ml-2 size-10;
+  }
+  .btn-gold .btn-chip {
+    @apply bg-white text-gold-deep;
+  }
+  .btn-outline .btn-chip,
+  .btn-light .btn-chip {
+    @apply bg-ink text-cream;
+  }
+  .btn-glass .btn-chip {
+    @apply bg-white text-ink;
   }
 
   /* Form controls */

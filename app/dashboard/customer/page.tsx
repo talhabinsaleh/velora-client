@@ -55,7 +55,7 @@ export default function CustomerOverview() {
                 </div>
               </div>
               <Link href="/dashboard/customer/appointments?status=confirmed" className="btn btn-dark btn-sm">
-                Pay now <ArrowRight className="arrow size-4" />
+                Pay now <span className="btn-chip"><ArrowRight /></span>
               </Link>
             </div>
           )}

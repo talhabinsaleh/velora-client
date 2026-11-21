@@ -121,7 +121,7 @@ export default function SignInForm() {
         <button type="submit" disabled={loading} className="btn btn-dark btn-lg w-full">
           {loading ? <Loader2 className="size-4 animate-spin" /> : null}
           {loading ? "Signing in…" : "Sign In"}
-          {!loading && <ArrowRight className="arrow size-4" />}
+          {!loading && <span className="btn-chip"><ArrowRight /></span>}
         </button>
       </form>
       <p className="mt-8 text-center text-sm text-muted">

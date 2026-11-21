@@ -20,7 +20,7 @@ export default async function FeaturedServices() {
         text="Hand-picked from the Velora menu. Every service is performed by senior stylists using salon-grade products."
         action={
           <Link href="/services" className="btn btn-outline shrink-0">
-            View all services <ArrowRight className="arrow size-4" />
+            View all services <span className="btn-chip"><ArrowRight /></span>
           </Link>
         }
       />

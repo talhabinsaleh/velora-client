@@ -165,7 +165,7 @@ export default function SignUpForm() {
         <button type="submit" disabled={loading || uploading} className="btn btn-dark btn-lg w-full">
           {loading && <Loader2 className="size-4 animate-spin" />}
           {loading ? "Creating your account…" : "Create account"}
-          {!loading && <ArrowRight className="arrow size-4" />}
+          {!loading && <span className="btn-chip"><ArrowRight /></span>}
         </button>
         <p className="text-center text-xs leading-relaxed text-muted">New accounts are customer accounts. Salon staff access is set up by the salon.</p>
       </form>

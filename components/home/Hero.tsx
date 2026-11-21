@@ -40,7 +40,7 @@ export default function Hero() {
 
             <div className="mt-9 flex animate-fade-up flex-wrap items-center gap-3 [animation-delay:240ms]">
               <Link href="/services" className="btn btn-gold btn-lg">
-                Explore Salon Services <ArrowRight className="arrow size-4" />
+                Explore Salon Services <span className="btn-chip"><ArrowRight /></span>
               </Link>
               <Link href="#how-it-works" className="btn btn-glass btn-lg">
                 How it works

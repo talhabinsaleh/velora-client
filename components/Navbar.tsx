@@ -56,20 +56,20 @@ export default function Navbar({ initialUser }: { initialUser: NavUser | null })
 
   return (
     <>
-      <header
-        className={`fixed inset-x-0 top-0 z-50 transition-[padding] duration-500 ease-out ${floating ? "px-3 pt-3 sm:px-6 sm:pt-5" : "px-0 pt-0"}`}
-      >
+      {/* Over the hero the bar is open and transparent. Once you scroll (and on every other
+          page) it tucks into a compact floating glass pill. */}
+      <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ease-out ${floating ? "px-0 pt-0" : "px-3 pt-3"}`}>
         <nav
           aria-label="Main"
-          className={`mx-auto flex h-16 items-center justify-between gap-4 transition-all duration-500 ease-out ${
+          className={`relative mx-auto flex items-center justify-between gap-4 transition-all duration-500 ease-out ${
             floating
-              ? "max-w-6xl rounded-full border border-white/20 bg-white/[0.08] pr-2 pl-4 text-white shadow-[0_8px_32px_-12px_rgb(0_0_0/0.45)] backdrop-blur-xl sm:pl-5"
-              : "max-w-full rounded-none border-b border-line/80 bg-cream/85 px-4 text-ink shadow-[0_6px_24px_-18px_rgb(31_25_21/0.5)] backdrop-blur-xl sm:px-6 lg:px-[max(2rem,calc((100vw-80rem)/2+2rem))]"
+              ? "container-x h-20 border-b border-white/10 text-white"
+              : "h-[3.75rem] max-w-5xl rounded-full border border-line/70 bg-white/75 pr-2 pl-4 text-ink shadow-[0_18px_40px_-22px_rgb(31_25_21/0.55),inset_0_1px_0_rgb(255_255_255/0.8)] backdrop-blur-xl backdrop-saturate-150 sm:pl-5"
           }`}
         >
           <Logo tone={floating ? "light" : "dark"} />
 
-          <ul className="hidden items-center gap-1 md:flex">
+          <ul className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 md:flex">
             {links.map((link) => {
               const active = isActive(pathname, link.href);
               return (
@@ -77,17 +77,18 @@ export default function Navbar({ initialUser }: { initialUser: NavUser | null })
                   <Link
                     href={link.href}
                     aria-current={active ? "page" : undefined}
-                    className={`relative rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
-                      active
-                        ? floating
-                          ? "bg-white text-ink"
-                          : "bg-ink text-cream"
-                        : floating
-                          ? "text-white/85 hover:bg-white/12 hover:text-white"
-                          : "text-ink-3 hover:bg-sand hover:text-ink"
+                    className={`group relative flex flex-col items-center px-3.5 py-2 text-sm font-semibold transition-colors ${
+                      active ? (floating ? "text-white" : "text-ink") : floating ? "text-white/70 hover:text-white" : "text-muted hover:text-ink"
                     }`}
                   >
                     {link.label}
+                    {/* gold dot marks the current page, a short line previews it on hover */}
+                    <span
+                      aria-hidden
+                      className={`absolute -bottom-0.5 h-1 rounded-full bg-gold transition-all duration-300 ${
+                        active ? "w-1 opacity-100" : "w-0 opacity-0 group-hover:w-4 group-hover:opacity-60"
+                      }`}
+                    />
                   </Link>
                 </li>
               );
@@ -99,7 +100,7 @@ export default function Navbar({ initialUser }: { initialUser: NavUser | null })
               <>
                 {user.role !== "admin" && (
                   <Link href="/services" className="btn btn-gold btn-sm hidden lg:inline-flex">
-                    Book now <ArrowRight className="arrow size-4" />
+                    Book now <span className="btn-chip"><ArrowRight /></span>
                   </Link>
                 )}
                 <div className="hidden md:block">
@@ -107,15 +108,18 @@ export default function Navbar({ initialUser }: { initialUser: NavUser | null })
                 </div>
               </>
             ) : (
-              <div className="hidden items-center gap-1.5 md:flex">
+              <div className="hidden items-center gap-1 md:flex">
                 <Link
                   href="/sign-in"
-                  className={`btn btn-sm ${floating ? "text-white hover:bg-white/12" : "btn-ghost"} ${isActive(pathname, "/sign-in") && !floating ? "bg-sand" : ""}`}
+                  aria-current={isActive(pathname, "/sign-in") ? "page" : undefined}
+                  className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
+                    floating ? "text-white/85 hover:text-white" : isActive(pathname, "/sign-in") ? "text-ink" : "text-muted hover:text-ink"
+                  }`}
                 >
                   Sign In
                 </Link>
-                <Link href="/sign-up" className={`btn btn-sm ${floating ? "bg-white text-ink hover:bg-cream" : "btn-dark"}`}>
-                  Sign Up <ArrowRight className="arrow size-4" />
+                <Link href="/sign-up" className={`btn btn-sm ${floating ? "btn-light" : "btn-dark"}`}>
+                  Sign Up <span className="btn-chip"><ArrowRight /></span>
                 </Link>
               </div>
             )}
@@ -125,8 +129,8 @@ export default function Navbar({ initialUser }: { initialUser: NavUser | null })
               onClick={() => setOpen(true)}
               aria-label="Open menu"
               aria-expanded={open}
-              className={`inline-flex size-11 cursor-pointer items-center justify-center rounded-full md:hidden ${
-                floating ? "bg-white/12 text-white" : "bg-sand text-ink"
+              className={`inline-flex size-11 cursor-pointer items-center justify-center rounded-full transition md:hidden ${
+                floating ? "border border-white/25 bg-white/10 text-white backdrop-blur" : "bg-ink text-cream"
               }`}
             >
               <Menu className="size-5" />
@@ -135,8 +139,8 @@ export default function Navbar({ initialUser }: { initialUser: NavUser | null })
         </nav>
       </header>
 
-      {/* Pages without the full-screen hero start below the fixed bar */}
-      {!overHero && <div aria-hidden className="h-16" />}
+      {/* Pages without the full-screen hero start below the floating bar */}
+      {!overHero && <div aria-hidden className="h-[5.25rem]" />}
 
       <MobileMenu open={open} onClose={() => setOpen(false)} links={links} pathname={pathname} user={user} />
     </>

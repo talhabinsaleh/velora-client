@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2, Eye, Search, XCircle } from "lucide-react";
+import { CheckCircle2, Eye, MessageSquareText, Search, XCircle } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -139,7 +139,7 @@ function ManageAppointments() {
               <thead>
                 <tr>
                   <th>Customer</th>
-                  <th>Service</th>
+                  <th>Service · Message</th>
                   <th>Date &amp; time</th>
                   <th>Price</th>
                   <th>Status · Payment</th>
@@ -163,6 +163,12 @@ function ManageAppointments() {
                       </td>
                       <td className="max-w-[200px]">
                         <ServiceCell appointment={a} />
+                        {a.message && (
+                          <p className="mt-1.5 flex max-w-[200px] items-start gap-1 text-xs text-muted" title={a.message}>
+                            <MessageSquareText className="mt-px size-3.5 shrink-0 text-gold" />
+                            <span className="truncate italic">“{a.message}”</span>
+                          </p>
+                        )}
                       </td>
                       <td className="whitespace-nowrap">
                         <p className="font-medium">{formatAppointmentDate(a.appointmentDate)}</p>

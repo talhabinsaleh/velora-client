@@ -64,7 +64,7 @@ export default function VisitUs() {
               </ul>
               <div className="mt-7 flex flex-wrap gap-2">
                 <Link href="/services" className="btn btn-dark">
-                  Book an appointment <ArrowRight className="arrow size-4" />
+                  Book an appointment <span className="btn-chip"><ArrowRight /></span>
                 </Link>
                 <a href={SALON.mapUrl} target="_blank" rel="noreferrer noopener" className="btn btn-outline">
                   Get directions
@@ -97,7 +97,7 @@ export function CallToAction() {
           />
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link href="/services" className="btn btn-dark btn-lg">
-              Explore Salon Services <ArrowRight className="arrow size-4" />
+              Explore Salon Services <span className="btn-chip"><ArrowRight /></span>
             </Link>
             <Link href="/sign-up" className="btn btn-outline btn-lg">
               Create free account

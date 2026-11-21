@@ -42,9 +42,9 @@ export default function ServiceCard({ service, priority = false }: { service: Se
           <Link
             href={href}
             aria-label={`View details for ${service.serviceName}`}
-            className="btn btn-sm btn-outline relative z-10 group-hover:border-ink group-hover:bg-ink group-hover:text-cream"
+            className="btn btn-sm btn-outline relative z-10 group-hover:border-ink/40 group-hover:[&_.btn-chip]:bg-gold group-hover:[&_svg]:-rotate-45"
           >
-            View Details <ArrowUpRight className="arrow size-4" />
+            View Details <span className="btn-chip"><ArrowUpRight /></span>
           </Link>
         </div>
       </div>
