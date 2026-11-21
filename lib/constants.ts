@@ -12,8 +12,7 @@ export const SALON = {
   address: ["House 42, Road 11", "Banani, Dhaka 1213", "Bangladesh"],
   mapUrl: "https://maps.google.com/?q=Road+11+Banani+Dhaka",
   hours: [
-    { days: "Saturday – Thursday", time: "10:00 AM – 8:00 PM" },
-    { days: "Friday", time: "10:00 AM – 8:00 PM" },
+    { days: "Every day", time: "10:00 AM – 8:00 PM" },
     { days: "Public holidays", time: "By appointment" },
   ],
   socials: [

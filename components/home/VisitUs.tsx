@@ -48,7 +48,7 @@ export default function VisitUs() {
                 <li className="flex gap-3">
                   <Clock className="mt-0.5 size-5 shrink-0 text-gold" />
                   <span>
-                    {SALON.hours.slice(0, 2).map((h) => (
+                    {SALON.hours.map((h) => (
                       <span key={h.days} className="block">
                         <span className="font-semibold">{h.days}:</span> {h.time}
                       </span>
