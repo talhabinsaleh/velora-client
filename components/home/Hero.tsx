@@ -7,6 +7,7 @@ import slide3 from "@/public/images/hero-3.jpg";
 import { CATEGORIES } from "@/lib/constants";
 import { formatDuration, formatPrice } from "@/lib/format";
 import type { Service } from "@/lib/types";
+import SmartLink from "@/components/SmartLink";
 import HeroSearch from "./HeroSearch";
 import HeroSlides from "./HeroSlides";
 
@@ -54,9 +55,9 @@ export default function Hero({ serviceCount, popular }: { serviceCount: number |
               <Link href="/services" data-magnetic className="btn btn-gold btn-lg">
                 Explore Salon Services <span className="btn-chip"><ArrowRight /></span>
               </Link>
-              <Link href="#how-it-works" className="btn btn-glass btn-lg">
+              <SmartLink href="/#how-it-works" className="btn btn-glass btn-lg">
                 How it works
-              </Link>
+              </SmartLink>
             </div>
 
             <dl className="mt-12 flex animate-fade-up flex-wrap gap-x-10 gap-y-5 [animation-delay:360ms]">

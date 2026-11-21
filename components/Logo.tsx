@@ -1,4 +1,4 @@
-import Link from "next/link";
+import SmartLink from "./SmartLink";
 
 interface LogoProps {
   tone?: "dark" | "light";
@@ -21,7 +21,7 @@ export function LogoMark({ className = "size-9" }: { className?: string }) {
 export default function Logo({ tone = "dark", className = "", href = "/" }: LogoProps) {
   const color = tone === "light" ? "text-white" : "text-ink";
   return (
-    <Link href={href} aria-label="Velora home" className={`group inline-flex items-center gap-2.5 ${color} ${className}`}>
+    <SmartLink href={href} aria-label="Velora home" className={`group inline-flex items-center gap-2.5 ${color} ${className}`}>
       <LogoMark className="size-9 transition-transform duration-500 group-hover:rotate-[8deg]" />
       <span className="flex flex-col leading-none">
         <span className="font-display text-[22px] font-medium tracking-[-0.01em]">Velora</span>
@@ -29,6 +29,6 @@ export default function Logo({ tone = "dark", className = "", href = "/" }: Logo
           Salon &amp; Spa
         </span>
       </span>
-    </Link>
+    </SmartLink>
   );
 }

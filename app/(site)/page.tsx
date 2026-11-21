@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import Categories from "@/components/home/Categories";
 import FeaturedServices, { FeaturedServicesSkeleton } from "@/components/home/FeaturedServices";
+import HashScroll from "@/components/home/HashScroll";
 import Hero from "@/components/home/Hero";
 import HowItWorks from "@/components/home/HowItWorks";
 import { getCategorySummaries, getFeaturedServices } from "@/lib/server-api";
@@ -14,6 +15,7 @@ export default async function HomePage() {
   const serviceCount = categories ? categories.reduce((sum, c) => sum + c.count, 0) : null;
   return (
     <>
+      <HashScroll />
       <Hero serviceCount={serviceCount} popular={featured ?? []} />
       <Suspense fallback={<FeaturedServicesSkeleton />}>
         <FeaturedServices />
