@@ -8,21 +8,26 @@ export interface Point {
   value: number;
 }
 
-const W = 720;
-const H = 240;
+const W = 560;
+const H = 250;
 const PAD = { top: 16, right: 12, bottom: 28, left: 44 };
 
-function niceMax(max: number) {
+// Round, human steps (1, 2, 5 × 10^n) with at most ~5 gridlines
+function niceStep(max: number, integer = false) {
   if (max <= 0) return 1;
-  const pow = 10 ** Math.floor(Math.log10(max));
-  const n = max / pow;
-  const step = n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10;
-  return step * pow;
+  const raw = max / 4;
+  const pow = 10 ** Math.floor(Math.log10(raw));
+  const n = raw / pow;
+  const step = (n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10) * pow;
+  return integer ? Math.max(1, Math.round(step)) : step;
 }
 
-function ticksFor(max: number) {
-  const top = niceMax(max);
-  return [0, top / 4, top / 2, (top * 3) / 4, top];
+function ticksFor(max: number, integer = false) {
+  const step = niceStep(max, integer);
+  const out = [0];
+  while (out[out.length - 1] < max) out.push(out[out.length - 1] + step);
+  if (out.length === 1) out.push(step);
+  return out;
 }
 
 function every(n: number) {
@@ -78,7 +83,7 @@ export function AreaChart({ data, format, valueLabel }: { data: Point[]; format:
         ))}
         {data.map((d, i) =>
           i % step === 0 || i === data.length - 1 ? (
-            <text key={d.key} x={x(i)} y={H - 8} textAnchor="middle" className="fill-muted text-[11px]">
+            <text key={d.key} x={x(i)} y={H - 8} textAnchor={i === 0 ? "start" : i === data.length - 1 ? "end" : "middle"} className="fill-muted text-[11px]">
               {d.label}
             </text>
           ) : null,
@@ -111,8 +116,8 @@ export function AreaChart({ data, format, valueLabel }: { data: Point[]; format:
 export function ColumnChart({ data, valueLabel }: { data: Point[]; valueLabel: string }) {
   const [hover, setHover] = useState<number | null>(null);
   const max = Math.max(...data.map((d) => d.value), 0);
-  const ticks = ticksFor(max).filter((t, i, a) => Number.isInteger(t) || i === a.length - 1);
-  const top = niceMax(max);
+  const ticks = ticksFor(max, true);
+  const top = ticks[ticks.length - 1];
   const iw = W - PAD.left - PAD.right;
   const ih = H - PAD.top - PAD.bottom;
   const slot = iw / Math.max(1, data.length);

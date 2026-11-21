@@ -118,7 +118,7 @@ export default function AdminOverview() {
             <h2 className="font-display text-2xl text-ink">Performance</h2>
             <FilterTabs<Range> value={range} options={RANGES} onChange={setRange} />
           </div>
-          <div className={`mt-4 grid gap-6 xl:grid-cols-[1.5fr_1fr] ${loading ? "opacity-60 transition-opacity" : ""}`}>
+          <div className={`mt-4 grid gap-6 xl:grid-cols-2 ${loading ? "opacity-60 transition-opacity" : ""}`}>
             <section className="card p-5 sm:p-6">
               <div className="flex flex-wrap items-end justify-between gap-3">
                 <div>
