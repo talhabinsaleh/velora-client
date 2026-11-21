@@ -5,6 +5,7 @@ import Link from "next/link";
 import { signOutEverywhere } from "@/lib/auth-client";
 import { LogoMark } from "@/components/Logo";
 import { SALON } from "@/lib/constants";
+import { hardNavigate } from "@/lib/navigation";
 
 export function AccessDenied({ home }: { home: string }) {
   return (
@@ -27,7 +28,7 @@ export function AccessDenied({ home }: { home: string }) {
 export function BlockedScreen() {
   async function leave() {
     await signOutEverywhere();
-    window.location.assign("/");
+    hardNavigate("/");
   }
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-cream px-6 text-center">

@@ -23,10 +23,13 @@ export default function ServiceBrowser() {
   const page = Math.max(1, Number(params.get("page")) || 1);
 
   const [draft, setDraft] = useState(search);
-  const [result, setResult] = useState<Paged<Service> | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [syncedSearch, setSyncedSearch] = useState(search);
   const [reload, setReload] = useState(0);
+  const requestKey = `${reload}|${search}|${category}|${sort}|${page}`;
+  const [state, setState] = useState<{ key: string; result: Paged<Service> | null; error: string | null }>({ key: "", result: null, error: null });
+  const result = state.result;
+  const loading = state.key !== requestKey;
+  const error = loading ? null : state.error;
   const topRef = useRef<HTMLDivElement>(null);
 
   const update = useCallback(
@@ -44,7 +47,10 @@ export default function ServiceBrowser() {
   );
 
   // Keep the box in sync when the URL changes from elsewhere (back button, category links)
-  useEffect(() => setDraft(search), [search]);
+  if (syncedSearch !== search) {
+    setSyncedSearch(search);
+    setDraft(search);
+  }
 
   // Debounced search while typing
   useEffect(() => {
@@ -59,18 +65,15 @@ export default function ServiceBrowser() {
     if (search) query.set("search", search);
     if (category !== "all") query.set("category", category);
 
-    setLoading(true);
-    setError(null);
     api<Paged<Service>>(`/api/services?${query}`, { signal: controller.signal })
-      .then((data) => setResult(data))
+      .then((data) => setState({ key: requestKey, result: data, error: null }))
       .catch((err) => {
-        if ((err as Error).name !== "AbortError") setError(errorMessage(err, "Could not load services."));
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setLoading(false);
+        if ((err as Error).name !== "AbortError") {
+          setState((s) => ({ key: requestKey, result: s.result, error: errorMessage(err, "Could not load services.") }));
+        }
       });
     return () => controller.abort();
-  }, [search, category, sort, page, reload]);
+  }, [search, category, sort, page, requestKey]);
 
   const hasFilters = search !== "" || category !== "all";
 
@@ -152,7 +155,7 @@ export default function ServiceBrowser() {
 
         {loading && !result ? (
           <ServiceGridSkeleton count={PAGE_SIZE} />
-        ) : error ? (
+        ) : error && !loading ? (
           <ErrorState message={error} onRetry={() => setReload((n) => n + 1)} />
         ) : result && result.items.length === 0 ? (
           <EmptyState

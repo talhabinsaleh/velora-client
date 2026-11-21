@@ -34,16 +34,15 @@ export default function SignInForm() {
   const [errors, setErrors] = useState<{ email?: string; password?: string; form?: string }>({});
   const [loading, setLoading] = useState(false);
 
+  // An error passed back in the URL (for example from Google) is shown until the form is used
+  const code = params.get("error");
+  const urlError = code ? (OAUTH_ERRORS[code] ?? (code.toLowerCase().includes("block") ? OAUTH_ERRORS.blocked : OAUTH_ERRORS.google)) : null;
+  const formError = errors.form ?? (Object.keys(errors).length === 0 ? urlError : null);
+
   useEffect(() => {
-    const code = params.get("error");
-    if (code) {
-      const msg = OAUTH_ERRORS[code] ?? (code.toLowerCase().includes("block") ? OAUTH_ERRORS.blocked : OAUTH_ERRORS.google);
-      setErrors({ form: msg });
-      toast.error(msg);
-    } else if (redirect) {
-      toast.info("Please sign in to continue.", { id: "signin-needed" });
-    }
-  }, [params, redirect]);
+    if (urlError) toast.error(urlError, { id: "signin-error" });
+    else if (redirect) toast.info("Please sign in to continue.", { id: "signin-needed" });
+  }, [urlError, redirect]);
 
   async function submit(e: FormEvent) {
     e.preventDefault();
@@ -83,9 +82,9 @@ export default function SignInForm() {
       <GoogleButton redirect={redirect} />
       <Divider />
       <form onSubmit={submit} noValidate className="space-y-5">
-        {errors.form && (
+        {formError && (
           <p role="alert" className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-800">
-            {errors.form}
+            {formError}
           </p>
         )}
         <div>

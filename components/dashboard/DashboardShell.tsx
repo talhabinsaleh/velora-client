@@ -19,12 +19,13 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
 import { toast } from "sonner";
 import Avatar from "@/components/Avatar";
 import Logo from "@/components/Logo";
 import { signOutEverywhere, useSession } from "@/lib/auth-client";
 import type { Role } from "@/lib/types";
+import { hardNavigate } from "@/lib/navigation";
 
 interface NavItem {
   href: string;
@@ -71,14 +72,14 @@ export default function DashboardShell({ user: initial, children }: { user: Shel
     ? { name: data.user.name, email: data.user.email, image: data.user.image, role: initial.role }
     : initial;
   const items = NAV[user.role];
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => setOpen(false), [pathname]);
+  const [openOn, setOpenOn] = useState<string | null>(null);
+  const open = openOn === pathname;
+  const setOpen = (value: boolean) => setOpenOn(value ? pathname : null);
 
   async function logout() {
     await signOutEverywhere();
     toast.success("You have been signed out.");
-    window.location.assign("/");
+    hardNavigate("/");
   }
 
   const current = items.find((i) => activeFor(pathname, i));

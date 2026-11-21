@@ -49,7 +49,7 @@ export default function ImageUploader({
     }
   }
 
-  function useUrl() {
+  function applyUrl() {
     const url = urlDraft.trim();
     if (!isHttpUrl(url)) {
       toast.error("Please paste a full image link starting with https://");
@@ -133,7 +133,6 @@ export default function ImageUploader({
                 handle(e.dataTransfer.files?.[0]);
               }}
               disabled={uploading}
-              aria-invalid={invalid || undefined}
               className={`flex aspect-[16/9] w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed px-6 text-center transition ${
                 dragging ? "border-gold bg-gold-soft/40" : invalid ? "border-rose/60 bg-rose-50/40" : "border-line bg-cream hover:border-gold/70 hover:bg-sand/50"
               }`}
@@ -152,13 +151,13 @@ export default function ImageUploader({
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   e.preventDefault();
-                  useUrl();
+                  applyUrl();
                 }
               }}
               placeholder="https://example.com/photo.jpg"
               className="input"
             />
-            <button type="button" onClick={useUrl} className="btn btn-dark shrink-0">
+            <button type="button" onClick={applyUrl} className="btn btn-dark shrink-0">
               Use
             </button>
           </div>

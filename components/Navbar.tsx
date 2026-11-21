@@ -10,6 +10,7 @@ import Logo from "./Logo";
 import UserMenu, { type NavUser } from "./UserMenu";
 import { signOutEverywhere } from "@/lib/auth-client";
 import { toast } from "sonner";
+import { hardNavigate } from "@/lib/navigation";
 
 const PUBLIC_LINKS = [
   { href: "/", label: "Home" },
@@ -29,7 +30,10 @@ export default function Navbar({ initialUser }: { initialUser: NavUser | null })
 
   const overHero = pathname === "/";
   const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
+  // The menu remembers which page it was opened on, so it closes by itself after navigating
+  const [openOn, setOpenOn] = useState<string | null>(null);
+  const open = openOn === pathname;
+  const setOpen = (value: boolean) => setOpenOn(value ? pathname : null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -38,8 +42,7 @@ export default function Navbar({ initialUser }: { initialUser: NavUser | null })
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Close the mobile menu after navigating, and lock page scroll while it is open
-  useEffect(() => setOpen(false), [pathname]);
+  // Lock page scroll while the mobile menu is open
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => {
@@ -156,7 +159,7 @@ function MobileMenu({
   async function logout() {
     await signOutEverywhere();
     toast.success("You have been signed out. See you soon!");
-    window.location.assign("/");
+    hardNavigate("/");
   }
 
   return (

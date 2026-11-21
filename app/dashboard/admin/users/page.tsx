@@ -170,7 +170,7 @@ export default function ManageUsersPage() {
           )
         }
       >
-        {details.loading && !d ? (
+        {details.loading ? (
           <Spinner label="Loading customer…" className="py-10" />
         ) : details.error ? (
           <ErrorState message={details.error} onRetry={details.reload} />

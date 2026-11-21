@@ -3,29 +3,40 @@
 import { useCallback, useEffect, useState } from "react";
 import { api, errorMessage } from "./api";
 
+interface State<T> {
+  key: string | null;
+  data: T | null;
+  error: string | null;
+}
+
 // Loads JSON from the API whenever `path` changes. `reload()` fetches it again.
+// While a new request runs, the previous data stays on screen (so tables don't flash empty).
 export function useApi<T>(path: string | null) {
-  const [data, setData] = useState<T | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(path !== null);
   const [tick, setTick] = useState(0);
+  const key = path ? `${tick}:${path}` : null;
+  const [state, setState] = useState<State<T>>({ key: null, data: null, error: null });
 
   useEffect(() => {
-    if (!path) return;
+    if (!path || !key) return;
     const controller = new AbortController();
-    setLoading(true);
-    setError(null);
     api<T>(path, { signal: controller.signal })
-      .then((result) => setData(result))
+      .then((data) => setState({ key, data, error: null }))
       .catch((err) => {
-        if ((err as Error).name !== "AbortError") setError(errorMessage(err));
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setLoading(false);
+        if ((err as Error).name !== "AbortError") setState((s) => ({ key, data: s.data, error: errorMessage(err) }));
       });
     return () => controller.abort();
-  }, [path, tick]);
+  }, [path, key]);
 
   const reload = useCallback(() => setTick((n) => n + 1), []);
-  return { data, error, loading, reload, setData };
+  const setData = useCallback((update: (current: T | null) => T | null) => {
+    setState((s) => ({ ...s, data: update(s.data) }));
+  }, []);
+
+  return {
+    data: state.data,
+    error: state.key === key ? state.error : null,
+    loading: key !== null && state.key !== key,
+    reload,
+    setData,
+  };
 }

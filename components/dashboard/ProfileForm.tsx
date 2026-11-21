@@ -28,7 +28,7 @@ export default function ProfileForm() {
   if (loading && !data) return <Spinner label="Loading your profile…" />;
   if (error) return <ErrorState message={error} onRetry={reload} />;
   if (!data) return null;
-  return <Editor key={data._id} profile={data} onSaved={setData} />;
+  return <Editor key={data._id} profile={data} onSaved={(p) => setData(() => p)} />;
 }
 
 function Editor({ profile, onSaved }: { profile: Profile; onSaved: (p: Profile) => void }) {

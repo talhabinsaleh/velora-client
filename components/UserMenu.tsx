@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { signOutEverywhere } from "@/lib/auth-client";
 import Avatar from "./Avatar";
+import { hardNavigate } from "@/lib/navigation";
 
 export interface NavUser {
   name: string;
@@ -38,7 +39,7 @@ export default function UserMenu({ user, light }: { user: NavUser; light: boolea
     await signOutEverywhere();
     toast.success("You have been signed out. See you soon!");
     // A full load clears every cached private page
-    window.location.assign("/");
+    hardNavigate("/");
   }
 
   return (

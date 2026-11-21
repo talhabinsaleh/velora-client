@@ -28,32 +28,29 @@ export default function BookingPanel({ service }: { service: Service }) {
   const [date, setDate] = useState(today);
   const [slot, setSlot] = useState("");
   const [message, setMessage] = useState("");
-  const [availability, setAvailability] = useState<Availability | null>(null);
-  const [checking, setChecking] = useState(true);
-  const [availabilityError, setAvailabilityError] = useState<string | null>(null);
+  const [refresh, setRefresh] = useState(0);
+  const availabilityKey = `${refresh}|${date}`;
+  const [loaded, setLoaded] = useState<{ key: string; data: Availability | null; error: string | null }>({ key: "", data: null, error: null });
+  const checking = loaded.key !== availabilityKey;
+  const availability = checking ? null : loaded.data;
+  const availabilityError = checking ? null : loaded.error;
   const [submitting, setSubmitting] = useState(false);
   const [slotError, setSlotError] = useState<string | null>(null);
   const [booked, setBooked] = useState<{ date: string; slot: string } | null>(null);
-  const [refresh, setRefresh] = useState(0);
 
   useEffect(() => {
     const controller = new AbortController();
-    setChecking(true);
-    setAvailabilityError(null);
     api<Availability>(`/api/appointments/availability?serviceId=${service._id}&date=${date}`, { signal: controller.signal })
       .then((data) => {
-        setAvailability(data);
+        setLoaded({ key: availabilityKey, data, error: null });
         // Drop a selected slot that just became unavailable
         setSlot((current) => (current && (data.taken.includes(current) || data.past.includes(current)) ? "" : current));
       })
       .catch((err) => {
-        if ((err as Error).name !== "AbortError") setAvailabilityError(errorMessage(err));
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setChecking(false);
+        if ((err as Error).name !== "AbortError") setLoaded({ key: availabilityKey, data: null, error: errorMessage(err) });
       });
     return () => controller.abort();
-  }, [service._id, date, refresh]);
+  }, [service._id, date, availabilityKey]);
 
   const blocked = new Set([...(availability?.taken ?? []), ...(availability?.past ?? [])]);
   const openCount = TIME_SLOTS.filter((s) => !blocked.has(s)).length;
